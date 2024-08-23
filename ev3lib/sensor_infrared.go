@@ -25,7 +25,7 @@ type InfraredSensor struct {
 }
 
 // Creates a new infrared sensor from the provided port.
-func NewInfraredSensor(port Ev3Port) (*InfraredSensor, error) {
+func NewInfraredSensor(port EV3Port) (*InfraredSensor, error) {
 	sensor, err := ev3dev.SensorFor(string(port), infraredSensorDriverName)
 	if err != nil {
 		return nil, err

@@ -31,7 +31,7 @@ type GyroSensor struct {
 
 // Creates a new gyro sensor with the provided port.
 // Set inverted to true if arrow markings on the gyro are facing down.
-func NewGyroSensor(port Ev3Port, inverted bool) (*GyroSensor, error) {
+func NewGyroSensor(port EV3Port, inverted bool) (*GyroSensor, error) {
 	sensor, err := ev3dev.SensorFor(string(port), gyroSensorDriverName)
 	if err != nil {
 		return nil, err

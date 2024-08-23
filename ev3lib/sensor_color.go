@@ -30,7 +30,7 @@ type ColorSensor struct {
 
 // Creates a new color sensor with the provided port.
 // Defaults calibration values of minReflect to 0, and maxReflect to 1.
-func NewColorSensor(port Ev3Port) (*ColorSensor, error) {
+func NewColorSensor(port EV3Port) (*ColorSensor, error) {
 	sensor, err := ev3dev.SensorFor(string(port), colorSensorDriverName)
 	if err != nil {
 		return nil, err
