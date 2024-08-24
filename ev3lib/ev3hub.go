@@ -48,6 +48,10 @@ var _ EV3Brick = &TestEV3Brick{}
 
 type TestEV3Brick struct{}
 
+func NewTestEV3Brick() *TestEV3Brick {
+	return &TestEV3Brick{}
+}
+
 func (*TestEV3Brick) ButtonsPressed() []EV3Button {
 	return []EV3Button{}
 }

@@ -25,6 +25,10 @@ var _ ColorSensor = &TestColorSensor{}
 
 type TestColorSensor struct{}
 
+func NewTestColorSensor() *TestColorSensor {
+	return &TestColorSensor{}
+}
+
 func (s *TestColorSensor) Ambient() float64 {
 	return 0
 }

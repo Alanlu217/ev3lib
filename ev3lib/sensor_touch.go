@@ -23,6 +23,10 @@ var _ TouchSensor = &TestTouchSensor{}
 
 type TestTouchSensor struct{}
 
+func NewTestTouchSensor() *TestTouchSensor {
+	return &TestTouchSensor{}
+}
+
 func (s *TestTouchSensor) IsPressed() bool {
 	return false
 }

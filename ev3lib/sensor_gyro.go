@@ -28,6 +28,10 @@ var _ GyroSensor = &TestGyroSensor{}
 
 type TestGyroSensor struct{}
 
+func NewTestGyroSensor() *TestGyroSensor {
+	return &TestGyroSensor{}
+}
+
 func (s *TestGyroSensor) Rate() float64 {
 	return 0
 }

@@ -25,6 +25,10 @@ var _ UltrasonicSensor = &TestUltrasonicSensor{}
 
 type TestUltrasonicSensor struct{}
 
+func NewTestUltrasonicSensor() *TestUltrasonicSensor {
+	return &TestUltrasonicSensor{}
+}
+
 func (s *TestUltrasonicSensor) Distance() float64 {
 	return 0
 }

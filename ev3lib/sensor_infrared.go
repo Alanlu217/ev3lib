@@ -25,6 +25,10 @@ var _ InfraredSensor = &TestInfraredSensor{}
 
 type TestInfraredSensor struct{}
 
+func NewTestInfraredSensor() *TestInfraredSensor {
+	return &TestInfraredSensor{}
+}
+
 func (s *TestInfraredSensor) Distance() float64 {
 	return 0
 }
