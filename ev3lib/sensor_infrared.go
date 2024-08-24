@@ -8,6 +8,35 @@ import (
 	"github.com/ev3go/ev3dev"
 )
 
+////////////////////////////////////////////////////////////////////////////////
+// Infrared Sensor Interface                                                  //
+////////////////////////////////////////////////////////////////////////////////
+
+type InfraredSensor interface {
+	Distance() float64
+	Buttons(channel int) []BeaconButton
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Test Infrared Sensor                                                       //
+////////////////////////////////////////////////////////////////////////////////
+
+var _ InfraredSensor = &TestInfraredSensor{}
+
+type TestInfraredSensor struct{}
+
+func (s *TestInfraredSensor) Distance() float64 {
+	return 0
+}
+
+func (s *TestInfraredSensor) Buttons(channel int) []BeaconButton {
+	return []BeaconButton{}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// EV3 Infrared Sensor                                                        //
+////////////////////////////////////////////////////////////////////////////////
+
 const infraredSensorDriverName string = "lego-ev3-ir"
 
 type infraredSensorMode string
@@ -17,22 +46,24 @@ const (
 	infraredSensorModeRemote    infraredSensorMode = "IR-REMOTE"
 )
 
+var _ InfraredSensor = &EV3InfraredSensor{}
+
 // Provides access to the EV3 infrared sensor.
-type InfraredSensor struct {
+type EV3InfraredSensor struct {
 	sensor *ev3dev.Sensor
 
 	currentMode infraredSensorMode
 }
 
 // Creates a new infrared sensor from the provided port.
-func NewInfraredSensor(port EV3Port) (*InfraredSensor, error) {
+func NewInfraredSensor(port EV3Port) (*EV3InfraredSensor, error) {
 	sensor, err := ev3dev.SensorFor(string(port), infraredSensorDriverName)
 	if err != nil {
 		return nil, err
 	}
 
 	sensor.SetMode(string(infraredSensorModeProximity))
-	return &InfraredSensor{sensor: sensor, currentMode: infraredSensorModeProximity}, nil
+	return &EV3InfraredSensor{sensor: sensor, currentMode: infraredSensorModeProximity}, nil
 }
 
 type BeaconButton int
@@ -46,7 +77,7 @@ const (
 )
 
 // Returns the distance measured by the sensor from 0 to 1.
-func (s *InfraredSensor) Distance() float64 {
+func (s *EV3InfraredSensor) Distance() float64 {
 	if s.currentMode != infraredSensorModeProximity {
 		s.sensor.SetMode(string(infraredSensorModeProximity))
 	}
@@ -82,7 +113,7 @@ var buttonMap = map[int][]BeaconButton{
 
 // Returns a slice of BeaconButton's containing all the buttons that are currently being pressed.
 // Checks the buttons on the provided channel.
-func (s *InfraredSensor) Buttons(channel int) []BeaconButton {
+func (s *EV3InfraredSensor) Buttons(channel int) []BeaconButton {
 	if s.currentMode != infraredSensorModeRemote {
 		s.sensor.SetMode(string(infraredSensorModeRemote))
 	}

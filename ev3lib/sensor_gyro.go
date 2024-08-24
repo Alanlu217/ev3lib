@@ -8,6 +8,46 @@ import (
 	"github.com/ev3go/ev3dev"
 )
 
+////////////////////////////////////////////////////////////////////////////////
+// Gyro Sensor Interface                                                      //
+////////////////////////////////////////////////////////////////////////////////
+
+type GyroSensor interface {
+	Rate() float64
+	Angle() float64
+	AngleRate() (float64, float64)
+	ResetAngle(angle float64)
+	Calibrate()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Test Gyro Sensor                                                           //
+////////////////////////////////////////////////////////////////////////////////
+
+var _ GyroSensor = &TestGyroSensor{}
+
+type TestGyroSensor struct{}
+
+func (s *TestGyroSensor) Rate() float64 {
+	return 0
+}
+
+func (s *TestGyroSensor) Angle() float64 {
+	return 0
+}
+
+func (s *TestGyroSensor) AngleRate() (float64, float64) {
+	return 0, 0
+}
+
+func (s *TestGyroSensor) ResetAngle(angle float64) {}
+
+func (s *TestGyroSensor) Calibrate() {}
+
+////////////////////////////////////////////////////////////////////////////////
+// EV3 Gyro Sensor                                                            //
+////////////////////////////////////////////////////////////////////////////////
+
 const gyroSensorDriverName string = "lego-ev3-gyro"
 
 type gyroSensorMode string
@@ -20,8 +60,10 @@ const (
 	gyroSensorModeCalibrate gyroSensorMode = "GYRO_CAL"
 )
 
+var _ GyroSensor = &EV3GyroSensor{}
+
 // Provides access to the EV3 gyro sensor
-type GyroSensor struct {
+type EV3GyroSensor struct {
 	sensor *ev3dev.Sensor
 
 	initAngle   float64
@@ -31,14 +73,14 @@ type GyroSensor struct {
 
 // Creates a new gyro sensor with the provided port.
 // Set inverted to true if arrow markings on the gyro are facing down.
-func NewGyroSensor(port EV3Port, inverted bool) (*GyroSensor, error) {
+func NewGyroSensor(port EV3Port, inverted bool) (*EV3GyroSensor, error) {
 	sensor, err := ev3dev.SensorFor(string(port), gyroSensorDriverName)
 	if err != nil {
 		return nil, err
 	}
 
 	sensor.SetMode(string(gyroSensorModeAngle))
-	s := &GyroSensor{sensor: sensor, inverted: 1, initAngle: 0, currentMode: gyroSensorModeAngle}
+	s := &EV3GyroSensor{sensor: sensor, inverted: 1, initAngle: 0, currentMode: gyroSensorModeAngle}
 	if inverted {
 		s.inverted = -1
 	}
@@ -48,7 +90,7 @@ func NewGyroSensor(port EV3Port, inverted bool) (*GyroSensor, error) {
 
 // Returns the gyro's rotational speed in degrees per second.
 // Will max out at -440 and 440.
-func (s *GyroSensor) Rate() float64 {
+func (s *EV3GyroSensor) Rate() float64 {
 	if s.currentMode != gyroSensorModeRate {
 		s.sensor.SetMode(string(gyroSensorModeRate))
 	}
@@ -67,7 +109,7 @@ func (s *GyroSensor) Rate() float64 {
 
 // Returns the current angle of the gyro in degrees.
 // The angle has a max cap from -32768 to 32767 degrees, depending on the manufacturer it will either freeze or overflow.
-func (s *GyroSensor) Angle() float64 {
+func (s *EV3GyroSensor) Angle() float64 {
 	if s.currentMode != gyroSensorModeAngle {
 		s.sensor.SetMode(string(gyroSensorModeAngle))
 	}
@@ -85,7 +127,7 @@ func (s *GyroSensor) Angle() float64 {
 }
 
 // Returns both the angle and rate of the gyro, see Angle() and Rate() for more details
-func (s *GyroSensor) AngleRate() (float64, float64) {
+func (s *EV3GyroSensor) AngleRate() (float64, float64) {
 	if s.currentMode != gyroSensorModeAngleRate {
 		s.sensor.SetMode(string(gyroSensorModeAngleRate))
 	}
@@ -112,14 +154,14 @@ func (s *GyroSensor) AngleRate() (float64, float64) {
 }
 
 // Resets the current angle of the gyro.
-func (s *GyroSensor) ResetAngle(angle float64) {
+func (s *EV3GyroSensor) ResetAngle(angle float64) {
 	s.initAngle = angle
 }
 
 // Calibrates the gyro.
 // This function will block for around 200ms
 // Ensure that the gyro is completely still during the calirbation.
-func (s *GyroSensor) Calibrate() {
+func (s *EV3GyroSensor) Calibrate() {
 	s.sensor.SetMode(string(gyroSensorModeCalibrate))
 	time.Sleep(time.Millisecond * 100)
 	s.sensor.SetMode(string(gyroSensorModeAngle))

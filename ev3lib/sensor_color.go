@@ -7,6 +7,40 @@ import (
 	"github.com/ev3go/ev3dev"
 )
 
+////////////////////////////////////////////////////////////////////////////////
+// Color Sensor Interface                                                     //
+////////////////////////////////////////////////////////////////////////////////
+
+type ColorSensor interface {
+	Ambient() float64
+	Reflection() float64
+	GetRGB() (float64, float64, float64)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Test Color Sensor                                                          //
+////////////////////////////////////////////////////////////////////////////////
+
+var _ ColorSensor = &TestColorSensor{}
+
+type TestColorSensor struct{}
+
+func (s *TestColorSensor) Ambient() float64 {
+	return 0
+}
+
+func (s *TestColorSensor) Reflection() float64 {
+	return 0
+}
+
+func (s *TestColorSensor) GetRGB() (float64, float64, float64) {
+	return 0, 0, 0
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// EV3 Color Sensor                                                           //
+////////////////////////////////////////////////////////////////////////////////
+
 const colorSensorDriverName string = "lego-ev3-color"
 
 type colorSensorMode string
@@ -20,8 +54,10 @@ const (
 	colorSensorModeCalibrate    colorSensorMode = "COL-CAL"
 )
 
+var _ ColorSensor = &EV3ColorSensor{}
+
 // Provides access to the EV3 color sensor
-type ColorSensor struct {
+type EV3ColorSensor struct {
 	sensor *ev3dev.Sensor
 
 	minReflect, maxReflect float64
@@ -30,18 +66,18 @@ type ColorSensor struct {
 
 // Creates a new color sensor with the provided port.
 // Defaults calibration values of minReflect to 0, and maxReflect to 1.
-func NewColorSensor(port EV3Port) (*ColorSensor, error) {
+func NewColorSensor(port EV3Port) (ColorSensor, error) {
 	sensor, err := ev3dev.SensorFor(string(port), colorSensorDriverName)
 	if err != nil {
 		return nil, err
 	}
 
 	sensor.SetMode(string(colorSensorModeReflect))
-	return &ColorSensor{sensor: sensor, minReflect: 0, maxReflect: 1, currentMode: colorSensorModeReflect}, nil
+	return &EV3ColorSensor{sensor: sensor, minReflect: 0, maxReflect: 1, currentMode: colorSensorModeReflect}, nil
 }
 
 // Returns the ambient light intensity from 0 to 1.
-func (s *ColorSensor) Ambient() float64 {
+func (s *EV3ColorSensor) Ambient() float64 {
 	if s.currentMode != colorSensorModeAmbient {
 		s.sensor.SetMode(string(colorSensorModeAmbient))
 	}
@@ -61,7 +97,7 @@ func (s *ColorSensor) Ambient() float64 {
 }
 
 // Returns the reflected light intensity from 0 to 1.
-func (s *ColorSensor) Reflection() float64 {
+func (s *EV3ColorSensor) Reflection() float64 {
 	if s.currentMode != colorSensorModeReflect {
 		s.sensor.SetMode(string(colorSensorModeReflect))
 	}
@@ -81,7 +117,7 @@ func (s *ColorSensor) Reflection() float64 {
 }
 
 // Returns the measured color in RGB with each value from 0 to 1.
-func (s *ColorSensor) GetRGB() (float64, float64, float64) {
+func (s *EV3ColorSensor) GetRGB() (float64, float64, float64) {
 	if s.currentMode != colorSensorModeRGB {
 		s.sensor.SetMode(string(colorSensorModeRGB))
 	}

@@ -7,26 +7,52 @@ import (
 	"github.com/ev3go/ev3dev"
 )
 
+////////////////////////////////////////////////////////////////////////////////
+// Touch Sensor Interface                                                     //
+////////////////////////////////////////////////////////////////////////////////
+
+type TouchSensor interface {
+	IsPressed() bool
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Test Touch Sensor                                                          //
+////////////////////////////////////////////////////////////////////////////////
+
+var _ TouchSensor = &TestTouchSensor{}
+
+type TestTouchSensor struct{}
+
+func (s *TestTouchSensor) IsPressed() bool {
+	return false
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// EV3 Touch Sensor                                                           //
+////////////////////////////////////////////////////////////////////////////////
+
 const touchSensorDriverName string = "lego-ev3-touch"
 
+var _ TouchSensor = &EV3TouchSensor{}
+
 // Provides access to a EV3 touch sensor.
-type TouchSensor struct {
+type EV3TouchSensor struct {
 	sensor *ev3dev.Sensor
 }
 
 // Creates a new touch sensor on the provided port.
-func NewTouchSensor(port EV3Port) (*TouchSensor, error) {
+func NewTouchSensor(port EV3Port) (*EV3TouchSensor, error) {
 	sensor, err := ev3dev.SensorFor(string(port), touchSensorDriverName)
 	if err != nil {
 		return nil, err
 	}
 
 	sensor.SetMode("TOUCH")
-	return &TouchSensor{sensor: sensor}, nil
+	return &EV3TouchSensor{sensor: sensor}, nil
 }
 
 // Returns whether the button is currently being pressed.
-func (s *TouchSensor) IsPressed() bool {
+func (s *EV3TouchSensor) IsPressed() bool {
 	val, err := s.sensor.Value(0)
 	if err != nil {
 		log.Fatal(err.Error())
