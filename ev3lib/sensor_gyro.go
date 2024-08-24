@@ -57,7 +57,7 @@ const (
 	gyroSensorModeRate      gyroSensorMode = "GYRO-RATE"
 	gyroSensorModeFAS       gyroSensorMode = "GYRO-FAS"
 	gyroSensorModeAngleRate gyroSensorMode = "GYRO-G&A"
-	gyroSensorModeCalibrate gyroSensorMode = "GYRO_CAL"
+	gyroSensorModeCalibrate gyroSensorMode = "GYRO-CAL"
 )
 
 var _ GyroSensor = &EV3GyroSensor{}
