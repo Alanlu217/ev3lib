@@ -45,7 +45,7 @@ type EV3TouchSensor struct {
 }
 
 // Creates a new touch sensor on the provided port.
-func NewTouchSensor(port EV3Port) (*EV3TouchSensor, error) {
+func NewTouchSensor(port EV3Port) (TouchSensor, error) {
 	sensor, err := ev3dev.SensorFor(string(port), touchSensorDriverName)
 	if err != nil {
 		return nil, err

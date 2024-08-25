@@ -65,7 +65,7 @@ type EV3UltrasonicSensor struct {
 }
 
 // Creates a new ultrasonic sensor on the provided port.
-func NewUltrasonicSensor(port string) (*EV3UltrasonicSensor, error) {
+func NewUltrasonicSensor(port string) (UltrasonicSensor, error) {
 	sensor, err := ev3dev.SensorFor(string(port), ultrasonicSensorDriverName)
 	if err != nil {
 		return nil, err

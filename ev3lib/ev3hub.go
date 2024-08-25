@@ -48,7 +48,7 @@ var _ EV3Brick = &TestEV3Brick{}
 
 type TestEV3Brick struct{}
 
-func NewTestEV3Brick() *TestEV3Brick {
+func NewTestEV3Brick() EV3Brick {
 	return &TestEV3Brick{}
 }
 
@@ -89,7 +89,7 @@ var _ EV3Brick = &EV3{}
 type EV3 struct {
 }
 
-func NewEV3() *EV3 {
+func NewEV3() EV3Brick {
 	return &EV3{}
 }
 
