@@ -19,15 +19,15 @@ type TouchSensor interface {
 // Test Touch Sensor                                                          //
 ////////////////////////////////////////////////////////////////////////////////
 
-var _ TouchSensor = &TestTouchSensor{}
+var _ TouchSensor = &testTouchSensor{}
 
-type TestTouchSensor struct{}
+type testTouchSensor struct{}
 
-func NewTestTouchSensor() *TestTouchSensor {
-	return &TestTouchSensor{}
+func NewTestTouchSensor() TouchSensor {
+	return &testTouchSensor{}
 }
 
-func (s *TestTouchSensor) IsPressed() bool {
+func (s *testTouchSensor) IsPressed() bool {
 	return false
 }
 
@@ -37,10 +37,10 @@ func (s *TestTouchSensor) IsPressed() bool {
 
 const touchSensorDriverName string = "lego-ev3-touch"
 
-var _ TouchSensor = &EV3TouchSensor{}
+var _ TouchSensor = &ev3TouchSensor{}
 
 // Provides access to a EV3 touch sensor.
-type EV3TouchSensor struct {
+type ev3TouchSensor struct {
 	sensor *ev3dev.Sensor
 }
 
@@ -52,11 +52,11 @@ func NewTouchSensor(port EV3Port) (TouchSensor, error) {
 	}
 
 	sensor.SetMode("TOUCH")
-	return &EV3TouchSensor{sensor: sensor}, nil
+	return &ev3TouchSensor{sensor: sensor}, nil
 }
 
 // Returns whether the button is currently being pressed.
-func (s *EV3TouchSensor) IsPressed() bool {
+func (s *ev3TouchSensor) IsPressed() bool {
 	val, err := s.sensor.Value(0)
 	if err != nil {
 		log.Fatal(err.Error())

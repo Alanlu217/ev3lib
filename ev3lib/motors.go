@@ -48,53 +48,53 @@ type Motor interface {
 // Test Motor                                                                 //
 ////////////////////////////////////////////////////////////////////////////////
 
-var _ Motor = &TestMotor{}
+var _ Motor = &testMotor{}
 
-type TestMotor struct{}
+type testMotor struct{}
 
 func NewTestMotor() Motor {
-	return &TestMotor{}
+	return &testMotor{}
 }
 
-func (m *TestMotor) CountPerRot() int {
+func (m *testMotor) CountPerRot() int {
 	return 0
 }
 
-func (m *TestMotor) State() MotorState {
+func (m *testMotor) State() MotorState {
 	return Holding
 }
 
-func (m *TestMotor) Inverted() bool {
+func (m *testMotor) Inverted() bool {
 	return false
 }
 
-func (m *TestMotor) SetInverted(inverted bool) {}
+func (m *testMotor) SetInverted(inverted bool) {}
 
-func (m *TestMotor) Scale() float64 {
+func (m *testMotor) Scale() float64 {
 	return 0
 }
 
-func (m *TestMotor) SetScale(scale float64) {}
+func (m *testMotor) SetScale(scale float64) {}
 
-func (m *TestMotor) Position() float64 {
+func (m *testMotor) Position() float64 {
 	return 0
 }
 
-func (m *TestMotor) ResetPosition(pos float64) {}
+func (m *testMotor) ResetPosition(pos float64) {}
 
-func (m *TestMotor) Speed() float64 {
+func (m *testMotor) Speed() float64 {
 	return 0
 }
 
-func (m *TestMotor) Set(power float64) {}
+func (m *testMotor) Set(power float64) {}
 
-func (m *TestMotor) Stop() {}
+func (m *testMotor) Stop() {}
 
-func (m *TestMotor) StopAction() MotorStopAction {
+func (m *testMotor) StopAction() MotorStopAction {
 	return Coast
 }
 
-func (m *TestMotor) SetStopAction(s MotorStopAction) {}
+func (m *testMotor) SetStopAction(s MotorStopAction) {}
 
 ////////////////////////////////////////////////////////////////////////////////
 // EV3 Motor                                                                  //
@@ -125,9 +125,9 @@ func StopAllMotors() {
 	}
 }
 
-var _ Motor = &EV3Motor{}
+var _ Motor = &ev3Motor{}
 
-type EV3Motor struct {
+type ev3Motor struct {
 	motor *ev3dev.TachoMotor
 
 	scale float64
@@ -139,7 +139,7 @@ func NewMediumMotor(port EV3Port) (Motor, error) {
 		return nil, err
 	}
 
-	return &EV3Motor{motor: m, scale: 1}, nil
+	return &ev3Motor{motor: m, scale: 1}, nil
 }
 
 func NewLargeMotor(port EV3Port) (Motor, error) {
@@ -148,24 +148,24 @@ func NewLargeMotor(port EV3Port) (Motor, error) {
 		return nil, err
 	}
 
-	return &EV3Motor{motor: m, scale: 1}, nil
+	return &ev3Motor{motor: m, scale: 1}, nil
 }
 
-func (m *EV3Motor) CountPerRot() int {
+func (m *ev3Motor) CountPerRot() int {
 	return m.motor.CountPerRot()
 }
 
-func (m *EV3Motor) State() MotorState {
+func (m *ev3Motor) State() MotorState {
 	s, _ := m.motor.State()
 	return MotorState(s)
 }
 
-func (m *EV3Motor) Inverted() bool {
+func (m *ev3Motor) Inverted() bool {
 	p, _ := m.motor.Polarity()
 	return p == ev3dev.Inversed
 }
 
-func (m *EV3Motor) SetInverted(inverted bool) {
+func (m *ev3Motor) SetInverted(inverted bool) {
 	if inverted {
 		m.motor.SetPolarity(ev3dev.Inversed)
 	} else {
@@ -173,41 +173,41 @@ func (m *EV3Motor) SetInverted(inverted bool) {
 	}
 }
 
-func (m *EV3Motor) Scale() float64 {
+func (m *ev3Motor) Scale() float64 {
 	return m.scale
 }
 
-func (m *EV3Motor) SetScale(scale float64) {
+func (m *ev3Motor) SetScale(scale float64) {
 	m.scale = scale
 }
 
-func (m *EV3Motor) Position() float64 {
+func (m *ev3Motor) Position() float64 {
 	p, _ := m.motor.Position()
 	return float64(p) * m.scale
 }
 
-func (m *EV3Motor) ResetPosition(pos float64) {
+func (m *ev3Motor) ResetPosition(pos float64) {
 	m.motor.SetPosition(int(pos / m.scale))
 }
 
-func (m *EV3Motor) Speed() float64 {
+func (m *ev3Motor) Speed() float64 {
 	s, _ := m.motor.Speed()
 	return float64(s) * m.scale
 }
 
-func (m *EV3Motor) Set(power float64) {
+func (m *ev3Motor) Set(power float64) {
 	m.motor.SetDutyCycleSetpoint(int(power * 100)).Command("run-direct")
 }
 
-func (m *EV3Motor) Stop() {
+func (m *ev3Motor) Stop() {
 	m.motor.Command("stop")
 }
 
-func (m *EV3Motor) StopAction() MotorStopAction {
+func (m *ev3Motor) StopAction() MotorStopAction {
 	s, _ := m.motor.StopAction()
 	return MotorStopAction(s)
 }
 
-func (m *EV3Motor) SetStopAction(s MotorStopAction) {
+func (m *ev3Motor) SetStopAction(s MotorStopAction) {
 	m.motor.SetStopAction(string(s))
 }

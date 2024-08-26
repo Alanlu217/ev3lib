@@ -44,39 +44,39 @@ type EV3Brick interface {
 // TestEV3Brick                                                               //
 ////////////////////////////////////////////////////////////////////////////////
 
-var _ EV3Brick = &TestEV3Brick{}
+var _ EV3Brick = &testEV3Brick{}
 
-type TestEV3Brick struct{}
+type testEV3Brick struct{}
 
 func NewTestEV3Brick() EV3Brick {
-	return &TestEV3Brick{}
+	return &testEV3Brick{}
 }
 
-func (*TestEV3Brick) ButtonsPressed() []EV3Button {
+func (*testEV3Brick) ButtonsPressed() []EV3Button {
 	return []EV3Button{}
 }
 
-func (*TestEV3Brick) SetLight(color EV3Color) {}
+func (*testEV3Brick) SetLight(color EV3Color) {}
 
-func (*TestEV3Brick) Beep(frequency float64, duration float64) {}
+func (*testEV3Brick) Beep(frequency float64, duration float64) {}
 
-func (*TestEV3Brick) PlayNotes(notes []EV3Note, tempo float64) {}
+func (*testEV3Brick) PlayNotes(notes []EV3Note, tempo float64) {}
 
-func (*TestEV3Brick) SetVolume(volume float64) {}
+func (*testEV3Brick) SetVolume(volume float64) {}
 
-func (*TestEV3Brick) ClearScreen() {}
+func (*testEV3Brick) ClearScreen() {}
 
-func (*TestEV3Brick) DrawText(x int, y int, text string) {}
+func (*testEV3Brick) DrawText(x int, y int, text string) {}
 
-func (*TestEV3Brick) PrintScreen(text ...string) {}
+func (*testEV3Brick) PrintScreen(text ...string) {}
 
-func (*TestEV3Brick) DrawPixel(x int, y int) {}
+func (*testEV3Brick) DrawPixel(x int, y int) {}
 
-func (*TestEV3Brick) Voltage() float64 {
+func (*testEV3Brick) Voltage() float64 {
 	return 0
 }
 
-func (*TestEV3Brick) Current() float64 {
+func (*testEV3Brick) Current() float64 {
 	return 0
 }
 
@@ -84,55 +84,55 @@ func (*TestEV3Brick) Current() float64 {
 // Actual EV3Brick                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-var _ EV3Brick = &EV3{}
+var _ EV3Brick = &ev3{}
 
-type EV3 struct {
+type ev3 struct {
 }
 
 func NewEV3() EV3Brick {
-	return &EV3{}
+	return &ev3{}
 }
 
-func (e *EV3) ButtonsPressed() []EV3Button {
+func (e *ev3) ButtonsPressed() []EV3Button {
 	panic("not implemented") // TODO: Implement
 }
 
-func (e *EV3) SetLight(color EV3Color) {
+func (e *ev3) SetLight(color EV3Color) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (e *EV3) Beep(frequency float64, duration float64) {
+func (e *ev3) Beep(frequency float64, duration float64) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (e *EV3) PlayNotes(notes []EV3Note, tempo float64) {
+func (e *ev3) PlayNotes(notes []EV3Note, tempo float64) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (e *EV3) SetVolume(volume float64) {
+func (e *ev3) SetVolume(volume float64) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (e *EV3) ClearScreen() {
+func (e *ev3) ClearScreen() {
 	panic("not implemented") // TODO: Implement
 }
 
-func (e *EV3) DrawText(x int, y int, text string) {
+func (e *ev3) DrawText(x int, y int, text string) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (e *EV3) PrintScreen(text ...string) {
+func (e *ev3) PrintScreen(text ...string) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (e *EV3) DrawPixel(x int, y int) {
+func (e *ev3) DrawPixel(x int, y int) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (e *EV3) Voltage() float64 {
+func (e *ev3) Voltage() float64 {
 	panic("not implemented") // TODO: Implement
 }
 
-func (e *EV3) Current() float64 {
+func (e *ev3) Current() float64 {
 	panic("not implemented") // TODO: Implement
 }

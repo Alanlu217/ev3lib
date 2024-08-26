@@ -21,23 +21,23 @@ type UltrasonicSensor interface {
 // Test Ultrasonic Sensor                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 
-var _ UltrasonicSensor = &TestUltrasonicSensor{}
+var _ UltrasonicSensor = &testUltrasonicSensor{}
 
-type TestUltrasonicSensor struct{}
+type testUltrasonicSensor struct{}
 
-func NewTestUltrasonicSensor() *TestUltrasonicSensor {
-	return &TestUltrasonicSensor{}
+func NewTestUltrasonicSensor() UltrasonicSensor {
+	return &testUltrasonicSensor{}
 }
 
-func (s *TestUltrasonicSensor) Distance() float64 {
+func (s *testUltrasonicSensor) Distance() float64 {
 	return 0
 }
 
-func (s *TestUltrasonicSensor) DistanceSilent() float64 {
+func (s *testUltrasonicSensor) DistanceSilent() float64 {
 	return 0
 }
 
-func (s *TestUltrasonicSensor) Presence() bool {
+func (s *testUltrasonicSensor) Presence() bool {
 	return false
 }
 
@@ -55,10 +55,10 @@ const (
 	ultrasonicSensorModeListen          ultrasonicSensorMode = "US-LISTEN"
 )
 
-var _ UltrasonicSensor = &EV3UltrasonicSensor{}
+var _ UltrasonicSensor = &ev3UltrasonicSensor{}
 
 // Provides access to an EV3 ultrasonic sensor.
-type EV3UltrasonicSensor struct {
+type ev3UltrasonicSensor struct {
 	sensor *ev3dev.Sensor
 
 	currentMode ultrasonicSensorMode
@@ -72,11 +72,11 @@ func NewUltrasonicSensor(port string) (UltrasonicSensor, error) {
 	}
 
 	sensor.SetMode(string(ultrasonicSensorModeProximity))
-	return &EV3UltrasonicSensor{sensor: sensor, currentMode: ultrasonicSensorModeProximity}, nil
+	return &ev3UltrasonicSensor{sensor: sensor, currentMode: ultrasonicSensorModeProximity}, nil
 }
 
 // Returns the measured distance in centimeters from 0 to 2550.
-func (s *EV3UltrasonicSensor) Distance() float64 {
+func (s *ev3UltrasonicSensor) Distance() float64 {
 	if s.currentMode != ultrasonicSensorModeProximity {
 		s.sensor.SetMode(string(ultrasonicSensorModeProximity))
 	}
@@ -94,7 +94,7 @@ func (s *EV3UltrasonicSensor) Distance() float64 {
 }
 
 // Same as Distance(), but will turn sensor off after measurement.
-func (s *EV3UltrasonicSensor) DistanceSilent() float64 {
+func (s *ev3UltrasonicSensor) DistanceSilent() float64 {
 	if s.currentMode != ultrasonicSensorModeSilentProximity {
 		s.sensor.SetMode(string(ultrasonicSensorModeSilentProximity))
 	}
@@ -112,7 +112,7 @@ func (s *EV3UltrasonicSensor) DistanceSilent() float64 {
 }
 
 // Listens for the presence of other ultrasonic sensors.
-func (s *EV3UltrasonicSensor) Presence() bool {
+func (s *ev3UltrasonicSensor) Presence() bool {
 	if s.currentMode != ultrasonicSensorModeSilentProximity {
 		s.sensor.SetMode(string(ultrasonicSensorModeSilentProximity))
 	}
