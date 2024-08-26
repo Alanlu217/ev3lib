@@ -1,4 +1,4 @@
-//go:build linux && arm
+//go:build !ev3test
 
 package ev3
 
