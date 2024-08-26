@@ -1,8 +1,8 @@
 package ev3lib
 
 type CommandPage struct {
-	Name     string
-	Commands []Command
+	N string
+	C []Command
 }
 
 type MenuConfig interface {
