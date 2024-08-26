@@ -4,9 +4,10 @@ package ev3
 
 import (
 	"fmt"
-	"github.com/Alanlu217/ev3lib/ev3lib"
 	"log"
 	"strconv"
+
+	"github.com/Alanlu217/ev3lib/ev3lib"
 
 	"github.com/ev3go/ev3dev"
 )

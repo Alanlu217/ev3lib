@@ -3,10 +3,11 @@
 package ev3
 
 import (
-	"github.com/Alanlu217/ev3lib/ev3lib"
 	"log"
 	"strconv"
 	"time"
+
+	"github.com/Alanlu217/ev3lib/ev3lib"
 
 	"github.com/ev3go/ev3dev"
 )
