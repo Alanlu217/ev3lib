@@ -1,10 +1,18 @@
 package ev3lib
 
-type Menu[T any] struct {
-	Config T
-	Runs   []func(T)
+type CommandPage struct {
+	Name     string
+	Commands []Command
 }
 
-func NewMenu[T any](config T, runs ...func(T)) *Menu[T] {
-	return &Menu[T]{Config: config, Runs: runs}
+type MenuConfig interface {
+	GetCommandPages() []CommandPage
+}
+
+type Menu struct {
+	config MenuConfig
+}
+
+func NewMenu(config MenuConfig) *Menu {
+	return &Menu{}
 }
