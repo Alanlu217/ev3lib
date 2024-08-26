@@ -17,12 +17,12 @@ type configManager struct {
 	registeredConfigs map[string]MenuConfig
 }
 
-// registers a config with an associated hostname.
+// Register registers a config with an associated hostname.
 func (c *configManager) Register(hostname string, config MenuConfig) {
 	c.registeredConfigs[hostname] = config
 }
 
-// returns the correct config according to the current hostname.
+// GetConfig returns the correct config according to the current hostname.
 func (c *configManager) GetConfig() (MenuConfig, error) {
 	hostname, err := os.Hostname()
 	if err != nil {

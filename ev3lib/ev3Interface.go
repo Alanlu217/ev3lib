@@ -1,0 +1,102 @@
+package ev3lib
+
+////////////////////////////////////////////////////////////////////////////////
+// EV3Brick interface                                                         //
+////////////////////////////////////////////////////////////////////////////////
+
+type EV3Brick interface {
+	ButtonsPressed() []EV3Button
+
+	SetLight(color EV3Color)
+
+	Beep(frequency, duration float64)
+
+	PlayNotes(notes []EV3Note, tempo float64)
+
+	SetVolume(volume float64)
+
+	ClearScreen()
+
+	DrawText(x, y int, text string)
+
+	PrintScreen(text ...string)
+
+	DrawPixel(x, y int)
+
+	Voltage() float64
+
+	Current() float64
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Motor Interface                                                            //
+////////////////////////////////////////////////////////////////////////////////
+
+type Motor interface {
+	CountPerRot() int
+	State() MotorState
+
+	Inverted() bool
+	SetInverted(inverted bool)
+
+	Scale() float64
+	SetScale(scale float64)
+	Position() float64
+	ResetPosition(pos float64)
+	Speed() float64
+
+	Set(power float64)
+	Stop()
+
+	StopAction() MotorStopAction
+	SetStopAction(s MotorStopAction)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Color Sensor Interface                                                     //
+////////////////////////////////////////////////////////////////////////////////
+
+type ColorSensor interface {
+	Ambient() float64
+	Reflection() float64
+	GetRGB() (float64, float64, float64)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Gyro Sensor Interface                                                      //
+////////////////////////////////////////////////////////////////////////////////
+
+type GyroSensor interface {
+	Rate() float64
+	Angle() float64
+	AngleRate() (float64, float64)
+	ResetAngle(angle float64)
+	Calibrate()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Infrared Sensor Interface                                                  //
+////////////////////////////////////////////////////////////////////////////////
+
+type InfraredSensor interface {
+	Distance() float64
+	Buttons(channel int) []BeaconButton
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Touch Sensor Interface                                                     //
+////////////////////////////////////////////////////////////////////////////////
+
+type TouchSensor interface {
+	IsPressed() bool
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Ultrasonic Sensor Interface                                                //
+////////////////////////////////////////////////////////////////////////////////
+
+type UltrasonicSensor interface {
+	Distance() float64
+	DistanceSilent() float64
+	Presence() bool
+}

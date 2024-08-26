@@ -1,52 +1,15 @@
-package ev3lib
+//go:build linux && arm
+
+package ev3
 
 import (
+	"github.com/Alanlu217/ev3lib/ev3lib"
 	"log"
 	"strconv"
 	"time"
 
 	"github.com/ev3go/ev3dev"
 )
-
-////////////////////////////////////////////////////////////////////////////////
-// Gyro Sensor Interface                                                      //
-////////////////////////////////////////////////////////////////////////////////
-
-type GyroSensor interface {
-	Rate() float64
-	Angle() float64
-	AngleRate() (float64, float64)
-	ResetAngle(angle float64)
-	Calibrate()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Test Gyro Sensor                                                           //
-////////////////////////////////////////////////////////////////////////////////
-
-var _ GyroSensor = &testGyroSensor{}
-
-type testGyroSensor struct{}
-
-func NewTestGyroSensor() GyroSensor {
-	return &testGyroSensor{}
-}
-
-func (s *testGyroSensor) Rate() float64 {
-	return 0
-}
-
-func (s *testGyroSensor) Angle() float64 {
-	return 0
-}
-
-func (s *testGyroSensor) AngleRate() (float64, float64) {
-	return 0, 0
-}
-
-func (s *testGyroSensor) ResetAngle(angle float64) {}
-
-func (s *testGyroSensor) Calibrate() {}
 
 ////////////////////////////////////////////////////////////////////////////////
 // EV3 Gyro Sensor                                                            //
@@ -59,12 +22,11 @@ type gyroSensorMode string
 const (
 	gyroSensorModeAngle     gyroSensorMode = "GYRO-ANG"
 	gyroSensorModeRate      gyroSensorMode = "GYRO-RATE"
-	gyroSensorModeFAS       gyroSensorMode = "GYRO-FAS"
 	gyroSensorModeAngleRate gyroSensorMode = "GYRO-G&A"
 	gyroSensorModeCalibrate gyroSensorMode = "GYRO-CAL"
 )
 
-var _ GyroSensor = &ev3GyroSensor{}
+var _ ev3lib.GyroSensor = &ev3GyroSensor{}
 
 // Provides access to the EV3 gyro sensor
 type ev3GyroSensor struct {
@@ -75,9 +37,9 @@ type ev3GyroSensor struct {
 	currentMode gyroSensorMode
 }
 
-// Creates a new gyro sensor with the provided port.
+// NewGyroSensor creates a new gyro sensor with the provided port.
 // Set inverted to true if arrow markings on the gyro are facing down.
-func NewGyroSensor(port EV3Port, inverted bool) (GyroSensor, error) {
+func NewGyroSensor(port ev3lib.EV3Port, inverted bool) (ev3lib.GyroSensor, error) {
 	sensor, err := ev3dev.SensorFor(string(port), gyroSensorDriverName)
 	if err != nil {
 		return nil, err
@@ -92,7 +54,7 @@ func NewGyroSensor(port EV3Port, inverted bool) (GyroSensor, error) {
 	return s, nil
 }
 
-// Returns the gyro's rotational speed in degrees per second.
+// Rate returns the gyro's rotational speed in degrees per second.
 // Will max out at -440 and 440.
 func (s *ev3GyroSensor) Rate() float64 {
 	if s.currentMode != gyroSensorModeRate {
@@ -111,7 +73,7 @@ func (s *ev3GyroSensor) Rate() float64 {
 	return float64(valInt)
 }
 
-// Returns the current angle of the gyro in degrees.
+// Angle returns the current angle of the gyro in degrees.
 // The angle has a max cap from -32768 to 32767 degrees, depending on the manufacturer it will either freeze or overflow.
 func (s *ev3GyroSensor) Angle() float64 {
 	if s.currentMode != gyroSensorModeAngle {
@@ -130,7 +92,7 @@ func (s *ev3GyroSensor) Angle() float64 {
 	return float64(valInt)*float64(s.inverted) - s.initAngle
 }
 
-// Returns both the angle and rate of the gyro, see Angle() and Rate() for more details
+// AngleRate returns both the angle and rate of the gyro, see Angle() and Rate() for more details
 func (s *ev3GyroSensor) AngleRate() (float64, float64) {
 	if s.currentMode != gyroSensorModeAngleRate {
 		s.sensor.SetMode(string(gyroSensorModeAngleRate))
@@ -157,14 +119,14 @@ func (s *ev3GyroSensor) AngleRate() (float64, float64) {
 	return float64(angle)*float64(s.inverted) - s.initAngle, float64(rate)
 }
 
-// Resets the current angle of the gyro.
+// ResetAngle resets the current angle of the gyro.
 func (s *ev3GyroSensor) ResetAngle(angle float64) {
 	s.initAngle = angle
 }
 
-// Calibrates the gyro.
+// Calibrate calibrates the gyro.
 // This function will block for around 200ms
-// Ensure that the gyro is completely still during the calirbation.
+// Ensure that the gyro is completely still during the calibration.
 func (s *ev3GyroSensor) Calibrate() {
 	s.sensor.SetMode(string(gyroSensorModeCalibrate))
 	time.Sleep(time.Millisecond * 100)
