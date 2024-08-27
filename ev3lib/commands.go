@@ -133,6 +133,12 @@ func (c *CommandBase) While(cc ...Command) *CommandBase {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+func (c *CommandBase) RaceWith(cc ...Command) *CommandBase {
+	return NewParallelRace(append(cc, c.c)...)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 type repeatCommandDecorator struct {
 	c Command
 }
