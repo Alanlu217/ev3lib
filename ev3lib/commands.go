@@ -114,6 +114,12 @@ func (u *untilCommandDecorator) IsDone() bool {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+func (c *CommandBase) OnlyIf(pred func() bool) *CommandBase {
+	return NewIfCommand(pred, c.c, NewFuncCommand(func() {}))
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 type repeatCommandDecorator struct {
 	c Command
 }
