@@ -19,20 +19,49 @@ type Command interface {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Default Command                                                            //
+////////////////////////////////////////////////////////////////////////////////
+
+// DefaultCommand provides a default implementation for all commands.
+type DefaultCommand struct{}
+
+func (b *DefaultCommand) Init() {}
+
+func (b *DefaultCommand) Run() {}
+
+func (b *DefaultCommand) End(_ bool) {}
+
+func (b *DefaultCommand) IsDone() bool {
+	return true
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // Base Command                                                               //
 ////////////////////////////////////////////////////////////////////////////////
 
-// CommandBase provides a default implementation for all commands.
-type CommandBase struct{}
+// CommandBase provides decorator functions on commands.
+type CommandBase struct {
+	c Command
+}
 
-func (b *CommandBase) Init() {}
+func NewCommand(c Command) *CommandBase {
+	return &CommandBase{c}
+}
 
-func (b *CommandBase) Run() {}
+func (c *CommandBase) Init() {
+	c.c.Init()
+}
 
-func (b *CommandBase) End(interrupted bool) {}
+func (c *CommandBase) Run() {
+	c.c.Run()
+}
 
-func (b *CommandBase) IsDone() bool {
-	return true
+func (c *CommandBase) End(interrupted bool) {
+	c.c.End(interrupted)
+}
+
+func (c *CommandBase) IsDone() bool {
+	return c.c.IsDone()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -40,8 +69,8 @@ func (b *CommandBase) IsDone() bool {
 ////////////////////////////////////////////////////////////////////////////////
 
 // WithTimeout adds a timeout to a command specified by `dur`.
-func WithTimeout(c Command, dur time.Duration) Command {
-	return NewParallelRace(c, NewWaitCommand(dur))
+func (c *CommandBase) WithTimeout(dur time.Duration) *CommandBase {
+	return NewCommand(NewParallelRace(c.c, NewWaitCommand(dur)))
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -51,6 +80,11 @@ type untilCommandDecorator struct {
 	p func() bool
 
 	interrupted bool
+}
+
+// Until will run a command but will interrupt if a predicate is satisfied.
+func (c *CommandBase) Until(predicate func() bool) *CommandBase {
+	return NewCommand(&untilCommandDecorator{c: c.c, p: predicate})
 }
 
 func (u *untilCommandDecorator) Init() {
@@ -78,9 +112,35 @@ func (u *untilCommandDecorator) IsDone() bool {
 	return u.c.IsDone()
 }
 
-// Until will run a command but will interrupt if a predicate is satisfied.
-func Until(c Command, predicate func() bool) Command {
-	return &untilCommandDecorator{c: c, p: predicate}
+////////////////////////////////////////////////////////////////////////////////
+
+type repeatCommandDecorator struct {
+	c Command
+}
+
+// Repeatedly will run a command forever reinitialising it if it ends.
+func (c *CommandBase) Repeatedly() *CommandBase {
+	return NewCommand(&repeatCommandDecorator{c: c.c})
+}
+
+func (r *repeatCommandDecorator) Init() {
+	r.c.Init()
+}
+
+func (r *repeatCommandDecorator) Run() {
+	r.c.Run()
+}
+
+func (r *repeatCommandDecorator) End(interrupted bool) {
+	r.c.End(interrupted)
+}
+
+func (r *repeatCommandDecorator) IsDone() bool {
+	if r.c.IsDone() {
+		r.c.End(false)
+		r.c.Init()
+	}
+	return false
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -96,20 +156,34 @@ func RunCommand(c Command) {
 	c.End(false)
 }
 
+// RunTimedCommand will run a command in a blocking fashion with a target interval time.
+func RunTimedCommand(c Command, intervalTime time.Duration) {
+	t := time.NewTicker(intervalTime)
+
+	c.Init()
+	for !c.IsDone() {
+		c.Run()
+		<-t.C
+	}
+	c.End(false)
+
+	t.Stop()
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Sequence Command                                                           //
 ////////////////////////////////////////////////////////////////////////////////
 
 type sequence struct {
-	CommandBase
+	DefaultCommand
 
 	current  int
 	commands []Command
 }
 
 // NewSequence will run several commands one after another.
-func NewSequence(commands ...Command) Command {
-	return &sequence{current: 0, commands: commands}
+func NewSequence(commands ...Command) *CommandBase {
+	return NewCommand(&sequence{current: 0, commands: commands})
 }
 
 func (s *sequence) Init() {
@@ -139,15 +213,15 @@ func (s *sequence) IsDone() bool {
 ////////////////////////////////////////////////////////////////////////////////
 
 type parallel struct {
-	CommandBase
+	DefaultCommand
 
 	commands   []Command
 	incomplete int
 }
 
 // NewParallel will run several commands at the same time waiting for all commands to complete.
-func NewParallel(commands ...Command) Command {
-	return &parallel{commands: commands, incomplete: len(commands)}
+func NewParallel(commands ...Command) *CommandBase {
+	return NewCommand(&parallel{commands: commands, incomplete: len(commands)})
 }
 
 func (p *parallel) Init() {
@@ -182,7 +256,7 @@ func (p *parallel) IsDone() bool {
 ////////////////////////////////////////////////////////////////////////////////
 
 type parallelRace struct {
-	CommandBase
+	DefaultCommand
 
 	commands []Command
 	finished Command
@@ -191,8 +265,8 @@ type parallelRace struct {
 
 // NewParallelRace will run several commands at the same time.
 // It will finish when the first command finishes and will interrupt the rest.
-func NewParallelRace(commands ...Command) Command {
-	return &parallelRace{commands: commands}
+func NewParallelRace(commands ...Command) *CommandBase {
+	return NewCommand(&parallelRace{commands: commands})
 }
 
 func (p *parallelRace) Init() {
@@ -213,7 +287,7 @@ func (p *parallelRace) Run() {
 	}
 }
 
-func (p *parallelRace) End(interrupted bool) {
+func (p *parallelRace) End(_ bool) {
 	for _, c := range p.commands {
 		if c != p.finished {
 			c.End(true)
@@ -232,14 +306,14 @@ func (p *parallelRace) IsDone() bool {
 ////////////////////////////////////////////////////////////////////////////////
 
 type funcCommand struct {
-	CommandBase
+	DefaultCommand
 
 	f func()
 }
 
 // NewFuncCommand runs a function once.
-func NewFuncCommand(f func()) Command {
-	return &funcCommand{f: f}
+func NewFuncCommand(f func()) *CommandBase {
+	return NewCommand(&funcCommand{f: f})
 }
 
 func (f *funcCommand) Init() {
@@ -253,15 +327,15 @@ func (f *funcCommand) IsDone() bool {
 ////////////////////////////////////////////////////////////////////////////////
 
 type waitCommand struct {
-	CommandBase
+	DefaultCommand
 
 	init time.Time
 	dur  time.Duration
 }
 
 // NewWaitCommand waits for a time duration.
-func NewWaitCommand(time time.Duration) Command {
-	return &waitCommand{dur: time}
+func NewWaitCommand(time time.Duration) *CommandBase {
+	return NewCommand(&waitCommand{dur: time})
 }
 
 func (w *waitCommand) Init() {
@@ -275,18 +349,18 @@ func (w *waitCommand) IsDone() bool {
 ////////////////////////////////////////////////////////////////////////////////
 
 type printCommand struct {
-	CommandBase
+	DefaultCommand
 
 	text string
 }
 
 // NewPrintCommand prints out some text.
-func NewPrintCommand(text string) Command {
-	return &printCommand{text: text}
+func NewPrintCommand(text string) *CommandBase {
+	return NewCommand(&printCommand{text: text})
 }
 
-func NewPrintlnCommand(text string) Command {
-	return &printCommand{text: text + "\n"}
+func NewPrintlnCommand(text string) *CommandBase {
+	return NewCommand(&printCommand{text: text + "\n"})
 }
 
 func (p *printCommand) Init() {
@@ -295,4 +369,54 @@ func (p *printCommand) Init() {
 
 func (p *printCommand) IsDone() bool {
 	return true
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+type ifCommand struct {
+	DefaultCommand
+
+	isA  bool
+	pred func() bool
+	a, b Command
+}
+
+// NewIfCommand returns a command that will run a command depending on a predicate.
+// If the predicate returns true when the command is initialised, then command a will be run.
+func NewIfCommand(runA func() bool, a, b Command) *CommandBase {
+	return NewCommand(&ifCommand{isA: true, pred: runA, a: a, b: b})
+}
+
+func (f *ifCommand) Init() {
+	f.isA = f.pred()
+
+	if f.isA {
+		f.a.Init()
+	} else {
+		f.b.Init()
+	}
+}
+
+func (f *ifCommand) Run() {
+	if f.isA {
+		f.a.Run()
+	} else {
+		f.b.Run()
+	}
+}
+
+func (f *ifCommand) End(interrupted bool) {
+	if f.isA {
+		f.a.End(interrupted)
+	} else {
+		f.b.End(interrupted)
+	}
+}
+
+func (f *ifCommand) IsDone() bool {
+	if f.isA {
+		return f.a.IsDone()
+	} else {
+		return f.b.IsDone()
+	}
 }
