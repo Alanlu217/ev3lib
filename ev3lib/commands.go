@@ -114,8 +114,21 @@ func (u *untilCommandDecorator) IsDone() bool {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+// OnlyIf will run a command only if a predicate returns true.
 func (c *CommandBase) OnlyIf(pred func() bool) *CommandBase {
 	return NewIfCommand(pred, c.c, NewFuncCommand(func() {}))
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+func (c *CommandBase) Then(cc ...Command) *CommandBase {
+	return NewSequence(slices.Insert(cc, 0, c.c)...)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+func (c *CommandBase) While(cc ...Command) *CommandBase {
+	return NewParallel(append(cc, c.c)...)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
