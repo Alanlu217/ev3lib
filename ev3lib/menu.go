@@ -1,23 +1,41 @@
 package ev3lib
 
-type MenuPages []CommandPage
-
-func NewMenuPages() MenuPages {
-	temp := make(MenuPages, 0)
-	return temp
-}
-
-func (m MenuPages) AddPage(name string, pages ...Command) MenuPages {
-	return append(m, CommandPage{name, pages})
+type NamedCommand struct {
+	Name string
+	Command
 }
 
 type CommandPage struct {
-	N string
-	C []Command
+	menu *CommandMenu
+
+	Name     string
+	Commands []NamedCommand
+}
+
+func (c *CommandPage) AddCommand(name string, command Command) *CommandPage {
+	c.Commands = append(c.Commands, NamedCommand{name, command})
+
+	return c
+}
+
+func (c *CommandPage) Add() {
+	c.menu.Pages = append(c.menu.Pages, c)
+}
+
+type CommandMenu struct {
+	Pages []*CommandPage
+}
+
+func NewCommandMenu() *CommandMenu {
+	return &CommandMenu{Pages: make([]*CommandPage, 0)}
+}
+
+func (c *CommandMenu) AddPage(name string) *CommandPage {
+	return &CommandPage{menu: c, Name: name, Commands: make([]NamedCommand, 0)}
 }
 
 type MenuConfig interface {
-	GetCommandPages() MenuPages
+	GetCommandPages() CommandMenu
 }
 
 ////////////////////////////////////////////////////////////////////////////////
