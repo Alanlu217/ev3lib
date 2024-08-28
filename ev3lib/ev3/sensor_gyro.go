@@ -27,7 +27,7 @@ const (
 	gyroSensorModeCalibrate gyroSensorMode = "GYRO-CAL"
 )
 
-var _ ev3lib.GyroSensor = &ev3GyroSensor{}
+var _ ev3lib.GyroSensorInterface = &ev3GyroSensor{}
 
 // Provides access to the EV3 gyro sensor
 type ev3GyroSensor struct {
@@ -40,7 +40,7 @@ type ev3GyroSensor struct {
 
 // NewGyroSensor creates a new gyro sensor with the provided port.
 // Set inverted to true if arrow markings on the gyro are facing down.
-func NewGyroSensor(port ev3lib.EV3Port, inverted bool) (ev3lib.GyroSensor, error) {
+func NewGyroSensor(port ev3lib.EV3Port, inverted bool) (*ev3lib.GyroSensor, error) {
 	sensor, err := ev3dev.SensorFor(string(port), gyroSensorDriverName)
 	if err != nil {
 		return nil, err
@@ -52,7 +52,7 @@ func NewGyroSensor(port ev3lib.EV3Port, inverted bool) (ev3lib.GyroSensor, error
 		s.inverted = -1
 	}
 
-	return s, nil
+	return ev3lib.NewGyroSensorBase(s), nil
 }
 
 // Rate returns the gyro's rotational speed in degrees per second.

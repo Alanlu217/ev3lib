@@ -8,12 +8,12 @@ import "github.com/Alanlu217/ev3lib/ev3lib"
 // Actual EV3Brick                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-var _ ev3lib.EV3Brick = &ev3{}
+var _ ev3lib.EV3BrickInterface = &ev3{}
 
 type ev3 struct {
 }
 
-func NewEV3() ev3lib.EV3Brick {
+func NewEV3() ev3lib.EV3BrickInterface {
 	return &ev3{}
 }
 

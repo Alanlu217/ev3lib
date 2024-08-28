@@ -2,7 +2,7 @@ package ev3lib
 
 type NamedCommand struct {
 	Name string
-	Command
+	CommandInterface
 }
 
 type CommandPage struct {
@@ -12,7 +12,7 @@ type CommandPage struct {
 	Commands []NamedCommand
 }
 
-func (c *CommandPage) AddCommand(name string, command Command) *CommandPage {
+func (c *CommandPage) AddCommand(name string, command CommandInterface) *CommandPage {
 	c.Commands = append(c.Commands, NamedCommand{name, command})
 
 	return c

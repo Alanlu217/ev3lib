@@ -17,7 +17,7 @@ import (
 
 const touchSensorDriverName string = "lego-ev3-touch"
 
-var _ ev3lib.TouchSensor = &ev3TouchSensor{}
+var _ ev3lib.TouchSensorInterface = &ev3TouchSensor{}
 
 // Provides access to a EV3 touch sensor.
 type ev3TouchSensor struct {
@@ -25,14 +25,14 @@ type ev3TouchSensor struct {
 }
 
 // NewTouchSensor creates a new touch sensor on the provided port.
-func NewTouchSensor(port ev3lib.EV3Port) (ev3lib.TouchSensor, error) {
+func NewTouchSensor(port ev3lib.EV3Port) (*ev3lib.TouchSensor, error) {
 	sensor, err := ev3dev.SensorFor(string(port), touchSensorDriverName)
 	if err != nil {
 		return nil, err
 	}
 
 	sensor.SetMode("TOUCH")
-	return &ev3TouchSensor{sensor: sensor}, nil
+	return ev3lib.NewTouchSensorBase(&ev3TouchSensor{sensor: sensor}), nil
 }
 
 // IsPressed returns whether the button is currently being pressed.

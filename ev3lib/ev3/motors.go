@@ -8,7 +8,7 @@ import (
 )
 
 ////////////////////////////////////////////////////////////////////////////////
-// EV3 Motor                                                                  //
+// EV3 MotorInterface                                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 
 const (
@@ -36,30 +36,28 @@ func StopAllMotors() {
 	}
 }
 
-var _ ev3lib.Motor = &ev3Motor{}
-
 type ev3Motor struct {
 	motor *ev3dev.TachoMotor
 
 	scale float64
 }
 
-func NewMediumMotor(port ev3lib.EV3Port) (ev3lib.Motor, error) {
+func NewMediumMotor(port ev3lib.EV3Port) (*ev3lib.Motor, error) {
 	m, err := ev3dev.TachoMotorFor(string(port), mediumMotorDriverName)
 	if err != nil {
 		return nil, err
 	}
 
-	return &ev3Motor{motor: m, scale: 1}, nil
+	return ev3lib.NewMotorBase(&ev3Motor{motor: m, scale: 1}), nil
 }
 
-func NewLargeMotor(port ev3lib.EV3Port) (ev3lib.Motor, error) {
+func NewLargeMotor(port ev3lib.EV3Port) (*ev3lib.Motor, error) {
 	m, err := ev3dev.TachoMotorFor(string(port), largeMotorDriverName)
 	if err != nil {
 		return nil, err
 	}
 
-	return &ev3Motor{motor: m, scale: 1}, nil
+	return ev3lib.NewMotorBase(&ev3Motor{motor: m, scale: 1}), nil
 }
 
 func (m *ev3Motor) CountPerRot() int {

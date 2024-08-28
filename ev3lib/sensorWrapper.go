@@ -1,0 +1,61 @@
+package ev3lib
+
+////////////////////////////////////////////////////////////////////////////////
+// Color Sensor                                                               //
+////////////////////////////////////////////////////////////////////////////////
+
+type ColorSensor struct {
+	ColorSensorInterface
+}
+
+func NewColorSensorBase(c ColorSensorInterface) *ColorSensor {
+	return &ColorSensor{c}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Color Sensor                                                               //
+////////////////////////////////////////////////////////////////////////////////
+
+type GyroSensor struct {
+	GyroSensorInterface
+}
+
+func NewGyroSensorBase(g GyroSensorInterface) *GyroSensor {
+	return &GyroSensor{g}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Color Sensor                                                               //
+////////////////////////////////////////////////////////////////////////////////
+
+type InfraredSensor struct {
+	InfraredSensorInterface
+}
+
+func NewInfraredSensorBase(i InfraredSensorInterface) *InfraredSensor {
+	return &InfraredSensor{i}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Color Sensor                                                               //
+////////////////////////////////////////////////////////////////////////////////
+
+type TouchSensor struct {
+	TouchSensorInterface
+}
+
+func NewTouchSensorBase(t TouchSensorInterface) *TouchSensor {
+	return &TouchSensor{t}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Color Sensor                                                               //
+////////////////////////////////////////////////////////////////////////////////
+
+type UltrasonicSensor struct {
+	UltrasonicSensorInterface
+}
+
+func NewUltrasonicSensorBase(u UltrasonicSensorInterface) *UltrasonicSensor {
+	return &UltrasonicSensor{u}
+}

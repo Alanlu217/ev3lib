@@ -2,19 +2,22 @@ package bopConfig
 
 import (
 	"fmt"
-	"github.com/Alanlu217/ev3lib/tests/commands"
 	"time"
+
+	"github.com/Alanlu217/ev3lib/tests/commands"
 
 	"github.com/Alanlu217/ev3lib/ev3lib"
 )
 
 type BopConfig struct {
-	gyro ev3lib.GyroSensor
+	gyro *ev3lib.GyroSensor
 
-	leftColor, centreColor, rightColor ev3lib.ColorSensor
+	leftColor, centreColor, rightColor *ev3lib.ColorSensor
+
+	leftDrive, rightDrive *ev3lib.Motor
 }
 
-func (b *BopConfig) Run1() ev3lib.Command {
+func (b *BopConfig) Run1() ev3lib.CommandInterface {
 	return ev3lib.NewSequence(
 		ev3lib.NewFuncCommand(func() { fmt.Printf("b.gyro.Angle(): %v\n", b.gyro.Angle()) }),
 		ev3lib.NewWaitCommand(10*time.Second).WithTimeout(1*time.Second),
@@ -29,6 +32,7 @@ func (b *BopConfig) GetCommandPages() ev3lib.CommandMenu {
 	m.AddPage("runs").
 		AddCommand("test", ev3lib.NewPrintlnCommand("Testing")).
 		AddCommand("run1", b.Run1()).
+		AddCommand("motor", b.leftDrive.SetCommand(5).WithTimeout(5*time.Second)).
 		Add()
 
 	return *m

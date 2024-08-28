@@ -4,7 +4,7 @@ package ev3lib
 // EV3Brick interface                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-type EV3Brick interface {
+type EV3BrickInterface interface {
 	ButtonsPressed() []EV3Button
 
 	SetLight(color EV3Color)
@@ -29,10 +29,10 @@ type EV3Brick interface {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Motor Interface                                                            //
+// MotorInterface Interface                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-type Motor interface {
+type MotorInterface interface {
 	CountPerRot() int
 	State() MotorState
 
@@ -56,7 +56,7 @@ type Motor interface {
 // Color Sensor Interface                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 
-type ColorSensor interface {
+type ColorSensorInterface interface {
 	Ambient() float64
 	Reflection() float64
 	GetRGB() (float64, float64, float64)
@@ -66,7 +66,7 @@ type ColorSensor interface {
 // Gyro Sensor Interface                                                      //
 ////////////////////////////////////////////////////////////////////////////////
 
-type GyroSensor interface {
+type GyroSensorInterface interface {
 	Rate() float64
 	Angle() float64
 	AngleRate() (float64, float64)
@@ -78,7 +78,7 @@ type GyroSensor interface {
 // Infrared Sensor Interface                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 
-type InfraredSensor interface {
+type InfraredSensorInterface interface {
 	Distance() float64
 	Buttons(channel int) []BeaconButton
 }
@@ -87,7 +87,7 @@ type InfraredSensor interface {
 // Touch Sensor Interface                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 
-type TouchSensor interface {
+type TouchSensorInterface interface {
 	IsPressed() bool
 }
 
@@ -95,7 +95,7 @@ type TouchSensor interface {
 // Ultrasonic Sensor Interface                                                //
 ////////////////////////////////////////////////////////////////////////////////
 
-type UltrasonicSensor interface {
+type UltrasonicSensorInterface interface {
 	Distance() float64
 	DistanceSilent() float64
 	Presence() bool

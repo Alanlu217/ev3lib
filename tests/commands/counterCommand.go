@@ -11,7 +11,7 @@ type counterCommand struct {
 	target, current int
 }
 
-func NewCounterCommand(target int) *ev3lib.CommandBase {
+func NewCounterCommand(target int) *ev3lib.Command {
 	return ev3lib.NewCommand(&counterCommand{target: target})
 }
 

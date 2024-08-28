@@ -13,5 +13,8 @@ func NewBopConfig() *BopConfig {
 	b.centreColor = testUtils.NewTestColorSensor()
 	b.rightColor = testUtils.NewTestColorSensor()
 
+	b.leftDrive = testUtils.NewTestMotor()
+	b.rightDrive = testUtils.NewTestMotor()
+
 	return b
 }

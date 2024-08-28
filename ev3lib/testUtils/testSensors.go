@@ -6,12 +6,12 @@ import "github.com/Alanlu217/ev3lib/ev3lib"
 // Test Color Sensor                                                          //
 ////////////////////////////////////////////////////////////////////////////////
 
-var _ ev3lib.ColorSensor = &testColorSensor{}
+var _ ev3lib.ColorSensorInterface = &testColorSensor{}
 
 type testColorSensor struct{}
 
-func NewTestColorSensor() ev3lib.ColorSensor {
-	return &testColorSensor{}
+func NewTestColorSensor() *ev3lib.ColorSensor {
+	return ev3lib.NewColorSensorBase(&testColorSensor{})
 }
 
 func (s *testColorSensor) Ambient() float64 {
@@ -30,12 +30,12 @@ func (s *testColorSensor) GetRGB() (float64, float64, float64) {
 // Test Gyro Sensor                                                           //
 ////////////////////////////////////////////////////////////////////////////////
 
-var _ ev3lib.GyroSensor = &testGyroSensor{}
+var _ ev3lib.GyroSensorInterface = &testGyroSensor{}
 
 type testGyroSensor struct{}
 
-func NewTestGyroSensor() ev3lib.GyroSensor {
-	return &testGyroSensor{}
+func NewTestGyroSensor() *ev3lib.GyroSensor {
+	return ev3lib.NewGyroSensorBase(&testGyroSensor{})
 }
 
 func (s *testGyroSensor) Rate() float64 {
@@ -58,12 +58,12 @@ func (s *testGyroSensor) Calibrate() {}
 // Test Infrared Sensor                                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
-var _ ev3lib.InfraredSensor = &testInfraredSensor{}
+var _ ev3lib.InfraredSensorInterface = &testInfraredSensor{}
 
 type testInfraredSensor struct{}
 
-func NewTestInfraredSensor() ev3lib.InfraredSensor {
-	return &testInfraredSensor{}
+func NewTestInfraredSensor() *ev3lib.InfraredSensor {
+	return ev3lib.NewInfraredSensorBase(&testInfraredSensor{})
 }
 
 func (s *testInfraredSensor) Distance() float64 {
@@ -78,12 +78,12 @@ func (s *testInfraredSensor) Buttons(channel int) []ev3lib.BeaconButton {
 // Test Touch Sensor                                                          //
 ////////////////////////////////////////////////////////////////////////////////
 
-var _ ev3lib.TouchSensor = &testTouchSensor{}
+var _ ev3lib.TouchSensorInterface = &testTouchSensor{}
 
 type testTouchSensor struct{}
 
-func NewTestTouchSensor() ev3lib.TouchSensor {
-	return &testTouchSensor{}
+func NewTestTouchSensor() *ev3lib.TouchSensor {
+	return ev3lib.NewTouchSensorBase(&testTouchSensor{})
 }
 
 func (s *testTouchSensor) IsPressed() bool {
@@ -94,12 +94,12 @@ func (s *testTouchSensor) IsPressed() bool {
 // Test Ultrasonic Sensor                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 
-var _ ev3lib.UltrasonicSensor = &testUltrasonicSensor{}
+var _ ev3lib.UltrasonicSensorInterface = &testUltrasonicSensor{}
 
 type testUltrasonicSensor struct{}
 
-func NewTestUltrasonicSensor() ev3lib.UltrasonicSensor {
-	return &testUltrasonicSensor{}
+func NewTestUltrasonicSensor() *ev3lib.UltrasonicSensor {
+	return ev3lib.NewUltrasonicSensorBase(&testUltrasonicSensor{})
 }
 
 func (s *testUltrasonicSensor) Distance() float64 {

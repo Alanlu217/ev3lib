@@ -2,18 +2,17 @@ package testUtils
 
 import (
 	"github.com/Alanlu217/ev3lib/ev3lib"
+	"log"
 )
 
 ////////////////////////////////////////////////////////////////////////////////
-// Test Motor                                                                 //
+// Test MotorInterface                                                                 //
 ////////////////////////////////////////////////////////////////////////////////
-
-var _ ev3lib.Motor = &testMotor{}
 
 type testMotor struct{}
 
-func NewTestMotor() ev3lib.Motor {
-	return &testMotor{}
+func NewTestMotor() *ev3lib.Motor {
+	return ev3lib.NewMotorBase(&testMotor{})
 }
 
 func (m *testMotor) CountPerRot() int {
@@ -46,7 +45,9 @@ func (m *testMotor) Speed() float64 {
 	return 0
 }
 
-func (m *testMotor) Set(power float64) {}
+func (m *testMotor) Set(power float64) {
+	log.Println("Set Motor to", power)
+}
 
 func (m *testMotor) Stop() {}
 

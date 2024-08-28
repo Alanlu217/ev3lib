@@ -25,7 +25,7 @@ const (
 	colorSensorModeRGB     colorSensorMode = "RGB-RAW"
 )
 
-var _ ev3lib.ColorSensor = &ev3ColorSensor{}
+var _ ev3lib.ColorSensorInterface = &ev3ColorSensor{}
 
 // Provides access to the EV3 color sensor
 type ev3ColorSensor struct {
@@ -37,14 +37,14 @@ type ev3ColorSensor struct {
 
 // NewColorSensor creates a new color sensor with the provided port.
 // Defaults calibration values of minReflect to 0, and maxReflect to 1.
-func NewColorSensor(port ev3lib.EV3Port) (ev3lib.ColorSensor, error) {
+func NewColorSensor(port ev3lib.EV3Port) (*ev3lib.ColorSensor, error) {
 	sensor, err := ev3dev.SensorFor(string(port), colorSensorDriverName)
 	if err != nil {
 		return nil, err
 	}
 
 	sensor.SetMode(string(colorSensorModeReflect))
-	return &ev3ColorSensor{sensor: sensor, minReflect: 0, maxReflect: 1, currentMode: colorSensorModeReflect}, nil
+	return ev3lib.NewColorSensorBase(&ev3ColorSensor{sensor: sensor, minReflect: 0, maxReflect: 1, currentMode: colorSensorModeReflect}), nil
 }
 
 // Ambient returns the ambient light intensity from 0 to 1.

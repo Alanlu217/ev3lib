@@ -25,7 +25,7 @@ const (
 	infraredSensorModeRemote    infraredSensorMode = "IR-REMOTE"
 )
 
-var _ ev3lib.InfraredSensor = &ev3InfraredSensor{}
+var _ ev3lib.InfraredSensorInterface = &ev3InfraredSensor{}
 
 // Provides access to the EV3 infrared sensor.
 type ev3InfraredSensor struct {
@@ -35,14 +35,14 @@ type ev3InfraredSensor struct {
 }
 
 // NewInfraredSensor creates a new infrared sensor from the provided port.
-func NewInfraredSensor(port ev3lib.EV3Port) (ev3lib.InfraredSensor, error) {
+func NewInfraredSensor(port ev3lib.EV3Port) (*ev3lib.InfraredSensor, error) {
 	sensor, err := ev3dev.SensorFor(string(port), infraredSensorDriverName)
 	if err != nil {
 		return nil, err
 	}
 
 	sensor.SetMode(string(infraredSensorModeProximity))
-	return &ev3InfraredSensor{sensor: sensor, currentMode: infraredSensorModeProximity}, nil
+	return ev3lib.NewInfraredSensorBase(&ev3InfraredSensor{sensor: sensor, currentMode: infraredSensorModeProximity}), nil
 }
 
 // Distance returns the distance measured by the sensor from 0 to 1.

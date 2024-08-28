@@ -6,11 +6,11 @@ import "github.com/Alanlu217/ev3lib/ev3lib"
 // TestEV3Brick                                                               //
 ////////////////////////////////////////////////////////////////////////////////
 
-var _ ev3lib.EV3Brick = &testEV3Brick{}
+var _ ev3lib.EV3BrickInterface = &testEV3Brick{}
 
 type testEV3Brick struct{}
 
-func NewTestEV3Brick() ev3lib.EV3Brick {
+func NewTestEV3Brick() ev3lib.EV3BrickInterface {
 	return &testEV3Brick{}
 }
 

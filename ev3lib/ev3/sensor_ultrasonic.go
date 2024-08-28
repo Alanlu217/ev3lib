@@ -25,7 +25,7 @@ const (
 	ultrasonicSensorModeListen          ultrasonicSensorMode = "US-LISTEN"
 )
 
-var _ ev3lib.UltrasonicSensor = &ev3UltrasonicSensor{}
+var _ ev3lib.UltrasonicSensorInterface = &ev3UltrasonicSensor{}
 
 // Provides access to an EV3 ultrasonic sensor.
 type ev3UltrasonicSensor struct {
@@ -35,14 +35,14 @@ type ev3UltrasonicSensor struct {
 }
 
 // NewUltrasonicSensor creates a new ultrasonic sensor on the provided port.
-func NewUltrasonicSensor(port ev3lib.EV3Port) (ev3lib.UltrasonicSensor, error) {
+func NewUltrasonicSensor(port ev3lib.EV3Port) (*ev3lib.UltrasonicSensor, error) {
 	sensor, err := ev3dev.SensorFor(string(port), ultrasonicSensorDriverName)
 	if err != nil {
 		return nil, err
 	}
 
 	sensor.SetMode(string(ultrasonicSensorModeProximity))
-	return &ev3UltrasonicSensor{sensor: sensor, currentMode: ultrasonicSensorModeProximity}, nil
+	return ev3lib.NewUltrasonicSensorBase(&ev3UltrasonicSensor{sensor: sensor, currentMode: ultrasonicSensorModeProximity}), nil
 }
 
 // Distance returns the measured distance in centimeters from 0 to 2550.

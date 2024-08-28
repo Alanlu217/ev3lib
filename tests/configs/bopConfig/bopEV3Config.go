@@ -33,5 +33,15 @@ func NewBopConfig() *BopConfig {
 		log.Fatal(err)
 	}
 
+	b.leftDrive, err = ev3.NewLargeMotor(ev3lib.OUTA)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	b.rightDrive, err = ev3.NewLargeMotor(ev3lib.OUTB)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return b
 }
