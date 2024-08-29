@@ -18,8 +18,27 @@ func NewMotorBase(m MotorInterface) *Motor {
 // MotorInterface Commands                                                             //
 ////////////////////////////////////////////////////////////////////////////////
 
+type motorSetCommand struct {
+	DefaultCommand
+
+	power float64
+	m     *Motor
+}
+
+func (m *motorSetCommand) Init() {
+	m.m.Set(m.power)
+}
+
+func (m *motorSetCommand) End(bool) {
+	m.m.Stop()
+}
+
+func (m *motorSetCommand) IsDone() bool {
+	return false
+}
+
 func (m *Motor) SetCommand(power float64) *Command {
-	return NewFuncCommand(func() { m.Set(power) }).Repeatedly().WhenDone(func(_ bool) { m.Set(0) })
+	return NewCommand(&motorSetCommand{power: power, m: m})
 }
 
 ////////////////////////////////////////////////////////////////////////////////
