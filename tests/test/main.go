@@ -9,5 +9,5 @@ import (
 func main() {
 	config := bopConfig.NewBopConfig()
 
-	ev3lib.RunTimedCommand(config.GetCommandPages().Pages[0].Commands[2].CommandInterface, 20*time.Millisecond)
+	ev3lib.RunTimedCommand(config.GetCommandPages().Pages[0].Commands[2], 20*time.Millisecond)
 }

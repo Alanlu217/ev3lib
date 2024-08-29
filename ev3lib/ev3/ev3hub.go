@@ -2,7 +2,11 @@
 
 package ev3
 
-import "github.com/Alanlu217/ev3lib/ev3lib"
+import (
+	"github.com/Alanlu217/ev3lib/ev3lib"
+	"github.com/ev3go/ev3dev"
+	"log"
+)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Actual EV3Brick                                                            //
@@ -11,10 +15,11 @@ import "github.com/Alanlu217/ev3lib/ev3lib"
 var _ ev3lib.EV3BrickInterface = &ev3{}
 
 type ev3 struct {
+	p ev3dev.PowerSupply
 }
 
 func NewEV3() ev3lib.EV3BrickInterface {
-	return &ev3{}
+	return &ev3{p: ""}
 }
 
 func (e *ev3) ButtonsPressed() []ev3lib.EV3Button {
@@ -38,7 +43,9 @@ func (e *ev3) SetVolume(volume float64) {
 }
 
 func (e *ev3) ClearScreen() {
-	panic("not implemented") // TODO: Implement
+	for i := 0; i < LCDByteLength; i++ {
+		LCD.Set(i, 255)
+	}
 }
 
 func (e *ev3) DrawText(x int, y int, text string) {
@@ -54,9 +61,19 @@ func (e *ev3) DrawPixel(x int, y int) {
 }
 
 func (e *ev3) Voltage() float64 {
-	panic("not implemented") // TODO: Implement
+	volt, err := e.p.Voltage()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return volt
 }
 
 func (e *ev3) Current() float64 {
-	panic("not implemented") // TODO: Implement
+	curr, err := e.p.Current()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return curr
 }

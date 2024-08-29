@@ -1,5 +1,11 @@
 package ev3lib
 
+import "math"
+
+////////////////////////////////////////////////////////////////////////////////
+// PID Controller                                                             //
+////////////////////////////////////////////////////////////////////////////////
+
 type PIDController struct {
 	kp, ki, kd float64
 
@@ -52,4 +58,20 @@ func (p *PIDController) SetPID(kp, ki, kd float64) {
 	p.kp = kp
 	p.ki = ki
 	p.kd = kd
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// LCD Utils                                                                  //
+////////////////////////////////////////////////////////////////////////////////
+
+func LCDIndexToPixel(idx int) (x, y int) {
+	row, rem := math.Modf(float64(idx) / (128 * 4))
+
+	col := math.Floor(rem * 128)
+
+	return int(row), int(col)
+}
+
+func LCDPixelToIndex(x, y int) int {
+	return x*4 + y*4*178
 }
