@@ -21,7 +21,7 @@ type EV3BrickInterface interface {
 
 	PrintScreen(text ...string)
 
-	DrawPixel(x, y int)
+	DrawPixel(x, y int, black bool)
 
 	Voltage() float64
 

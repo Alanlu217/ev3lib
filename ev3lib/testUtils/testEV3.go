@@ -32,7 +32,7 @@ func (*testEV3Brick) DrawText(x int, y int, text string) {}
 
 func (*testEV3Brick) PrintScreen(text ...string) {}
 
-func (*testEV3Brick) DrawPixel(x int, y int) {}
+func (*testEV3Brick) DrawPixel(x int, y int, black bool) {}
 
 func (*testEV3Brick) Voltage() float64 {
 	return 0

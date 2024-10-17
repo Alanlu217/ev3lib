@@ -3,9 +3,10 @@
 package ev3
 
 import (
+	"log"
+
 	"github.com/Alanlu217/ev3lib/ev3lib"
 	"github.com/ev3go/ev3dev"
-	"log"
 )
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -43,21 +44,41 @@ func (e *ev3) SetVolume(volume float64) {
 }
 
 func (e *ev3) ClearScreen() {
-	for i := 0; i < LCDByteLength; i++ {
-		LCD.Set(i, 255)
-	}
+	LCD.Clear()
+	// for i := 0; i < LCDByteLength; i++ {
+	// 	LCD.Data[i] = 255
+	// }
 }
 
 func (e *ev3) DrawText(x int, y int, text string) {
-	panic("not implemented") // TODO: Implement
+	for i, char := range text {
+		values := FontMap[char]
+
+		for _, coord := range values {
+			x := coord.x + i*CharWidth
+			if x <= LCDWidth {
+				e.DrawPixel(x, coord.y, true)
+			}
+		}
+	}
 }
 
 func (e *ev3) PrintScreen(text ...string) {
 	panic("not implemented") // TODO: Implement
 }
 
-func (e *ev3) DrawPixel(x int, y int) {
-	panic("not implemented") // TODO: Implement
+func (e *ev3) DrawPixel(x int, y int, black bool) {
+	if black {
+		LCD.Data[ev3lib.LCDPixelToIndex(x, y)] = 0
+		LCD.Data[ev3lib.LCDPixelToIndex(x, y)+1] = 0
+		LCD.Data[ev3lib.LCDPixelToIndex(x, y)+2] = 0
+		LCD.Data[ev3lib.LCDPixelToIndex(x, y)+3] = 0
+	} else {
+		LCD.Data[ev3lib.LCDPixelToIndex(x, y)] = 255
+		LCD.Data[ev3lib.LCDPixelToIndex(x, y)+1] = 255
+		LCD.Data[ev3lib.LCDPixelToIndex(x, y)+2] = 255
+		LCD.Data[ev3lib.LCDPixelToIndex(x, y)+3] = 255
+	}
 }
 
 func (e *ev3) Voltage() float64 {
