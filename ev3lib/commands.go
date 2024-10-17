@@ -2,6 +2,7 @@ package ev3lib
 
 import (
 	"fmt"
+	"log"
 	"slices"
 	"time"
 )
@@ -201,7 +202,16 @@ func RunTimedCommand(c CommandInterface, intervalTime time.Duration) {
 
 	c.Init()
 	for !c.IsDone() {
+		start := time.Now()
+
 		c.Run()
+
+		delta := time.Since(start)
+
+		if delta > intervalTime {
+			log.Printf("Loop time overrun, took: %v\n", delta)
+		}
+
 		<-t.C
 	}
 	c.End(false)
