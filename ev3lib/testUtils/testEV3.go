@@ -1,6 +1,10 @@
 package testUtils
 
-import "github.com/Alanlu217/ev3lib/ev3lib"
+import (
+	"log"
+
+	"github.com/Alanlu217/ev3lib/ev3lib"
+)
 
 ////////////////////////////////////////////////////////////////////////////////
 // TestEV3Brick                                                               //
@@ -20,11 +24,17 @@ func (*testEV3Brick) ButtonsPressed() []ev3lib.EV3Button {
 
 func (*testEV3Brick) SetLight(color ev3lib.EV3Color) {}
 
-func (*testEV3Brick) Beep(frequency float64, duration float64) {}
+func (*testEV3Brick) Beep(frequency float64, duration float64) {
+	log.Printf("beep at %v for %v\n", frequency, duration)
+}
 
-func (*testEV3Brick) PlayNotes(notes []ev3lib.EV3Note, tempo float64) {}
+func (*testEV3Brick) PlayNotes(notes []ev3lib.EV3Note, tempo float64) {
+	log.Printf("play %v at %v bpm\n", notes, tempo)
+}
 
-func (*testEV3Brick) SetVolume(volume float64) {}
+func (*testEV3Brick) SetVolume(volume float64) {
+	log.Printf("set volume to %v\n", volume)
+}
 
 func (*testEV3Brick) ClearScreen() {}
 
