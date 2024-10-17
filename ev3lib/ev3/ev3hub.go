@@ -17,14 +17,41 @@ var _ ev3lib.EV3BrickInterface = &ev3{}
 
 type ev3 struct {
 	p ev3dev.PowerSupply
+	b ev3dev.ButtonPoller
 }
 
-func NewEV3() ev3lib.EV3BrickInterface {
-	return &ev3{p: ""}
+func NewEV3() *ev3lib.EV3Brick {
+	return ev3lib.NewEV3BrickBase(&ev3{p: "", b: ev3dev.ButtonPoller{}})
 }
 
 func (e *ev3) ButtonsPressed() []ev3lib.EV3Button {
-	panic("not implemented") // TODO: Implement
+	val, err := e.b.Poll()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	result := make([]ev3lib.EV3Button, 0)
+
+	if val&ev3dev.Back != 0 {
+		result = append(result, ev3lib.Back)
+	}
+	if val&ev3dev.Left != 0 {
+		result = append(result, ev3lib.Left)
+	}
+	if val&ev3dev.Middle != 0 {
+		result = append(result, ev3lib.Middle)
+	}
+	if val&ev3dev.Right != 0 {
+		result = append(result, ev3lib.Right)
+	}
+	if val&ev3dev.Up != 0 {
+		result = append(result, ev3lib.Up)
+	}
+	if val&ev3dev.Down != 0 {
+		result = append(result, ev3lib.Down)
+	}
+
+	return result
 }
 
 func (e *ev3) SetLight(color ev3lib.EV3Color) {

@@ -10,8 +10,8 @@ var _ ev3lib.EV3BrickInterface = &testEV3Brick{}
 
 type testEV3Brick struct{}
 
-func NewTestEV3Brick() ev3lib.EV3BrickInterface {
-	return &testEV3Brick{}
+func NewTestEV3Brick() *ev3lib.EV3Brick {
+	return ev3lib.NewEV3BrickBase(&testEV3Brick{})
 }
 
 func (*testEV3Brick) ButtonsPressed() []ev3lib.EV3Button {

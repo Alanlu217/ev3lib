@@ -5,37 +5,25 @@ type NamedCommand struct {
 	CommandInterface
 }
 
-type CommandPage struct {
-	menu *CommandMenu
+////////////////////////////////////////////////////////////////////////////////
+// MenuPage                                                                       //
+////////////////////////////////////////////////////////////////////////////////
+
+type MenuPage struct {
+	menu *Menu
 
 	Name     string
 	Commands []NamedCommand
 }
 
-func (c *CommandPage) AddCommand(name string, command CommandInterface) *CommandPage {
+func (c *MenuPage) AddCommand(name string, command CommandInterface) *MenuPage {
 	c.Commands = append(c.Commands, NamedCommand{name, command})
 
 	return c
 }
 
-func (c *CommandPage) Add() {
+func (c *MenuPage) Add() {
 	c.menu.Pages = append(c.menu.Pages, c)
-}
-
-type CommandMenu struct {
-	Pages []*CommandPage
-}
-
-func NewCommandMenu() *CommandMenu {
-	return &CommandMenu{Pages: make([]*CommandPage, 0)}
-}
-
-func (c *CommandMenu) AddPage(name string) *CommandPage {
-	return &CommandPage{menu: c, Name: name, Commands: make([]NamedCommand, 0)}
-}
-
-type MenuConfig interface {
-	GetCommandPages() CommandMenu
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -43,10 +31,17 @@ type MenuConfig interface {
 ////////////////////////////////////////////////////////////////////////////////
 
 type Menu struct {
-	config MenuConfig
+	Pages []*MenuPage
 }
 
-// NewMenu takes a MenuConfig and returns a new menu
-func NewMenu(config MenuConfig) *Menu {
-	return &Menu{config}
+func NewCommandMenu() *Menu {
+	return &Menu{Pages: make([]*MenuPage, 0)}
+}
+
+func (c *Menu) AddPage(name string) *MenuPage {
+	return &MenuPage{menu: c, Name: name, Commands: make([]NamedCommand, 0)}
+}
+
+type MenuConfig interface {
+	GetCommandPages() Menu
 }

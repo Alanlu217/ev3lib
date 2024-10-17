@@ -1,0 +1,25 @@
+package ev3lib
+
+////////////////////////////////////////////////////////////////////////////////
+// EV3BrickInterface Base                                                                 //
+////////////////////////////////////////////////////////////////////////////////
+
+type EV3Brick struct {
+	EV3BrickInterface
+}
+
+func NewEV3BrickBase(e EV3BrickInterface) *EV3Brick {
+	return &EV3Brick{e}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// MainMenuInterface Base                                                                 //
+////////////////////////////////////////////////////////////////////////////////
+
+type MainMenuController struct {
+	MainMenuInterface
+}
+
+func NewMainMenuController(m MainMenuInterface) *MainMenuController {
+	return &MainMenuController{m}
+}

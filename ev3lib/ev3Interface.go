@@ -29,7 +29,27 @@ type EV3BrickInterface interface {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// MotorInterface Interface                                                            //
+// Main Menu interface                                                        //
+////////////////////////////////////////////////////////////////////////////////
+
+type MainMenuInterface interface {
+	RunSelected() bool
+
+	NextCommand() bool
+	PreviousCommand() bool
+
+	SetCommand() int
+
+	NextPage() bool
+	PreviousPage() bool
+
+	SetPage() int
+
+	Display(menu *Menu, command, page int)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// MotorInterface Interface                                                   //
 ////////////////////////////////////////////////////////////////////////////////
 
 type MotorInterface interface {
