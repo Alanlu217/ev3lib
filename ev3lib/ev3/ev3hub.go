@@ -55,9 +55,9 @@ func (e *ev3) DrawText(x int, y int, text string) {
 		values := FontMap[char]
 
 		for _, coord := range values {
-			x := coord.x + i*CharWidth
-			if x <= LCDWidth {
-				e.DrawPixel(x, coord.y, true)
+			new_x := x + coord.x + i*CharWidth
+			if new_x <= LCDWidth {
+				e.DrawPixel(new_x, y+coord.y, true)
 			}
 		}
 	}
