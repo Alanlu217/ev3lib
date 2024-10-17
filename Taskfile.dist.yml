@@ -3,14 +3,25 @@
 version: '3'
 
 tasks:
-  test:
-    desc: "Runs the current go module with the ev3test tag."
+  native:
+    desc: "Builds the current go module for running on local machine."
+
+    vars:
+      out: '{{.o | default "main"}}'
 
     cmds:
-      - go run -tags ev3test .
+      - go build -o {{.out}} .
 
     dir: '{{.USER_WORKING_DIR}}'
   
+  test:
+    desc: "Runs the current go module natively."
+
+    cmds:
+      - go run .
+
+    dir: '{{.USER_WORKING_DIR}}'
+
   build:
     desc: "Builds the current go module for deployment on an EV3."
 
