@@ -4,7 +4,6 @@ package main
 
 import (
 	"log"
-	"time"
 
 	"github.com/Alanlu217/ev3lib/ev3lib"
 	"github.com/Alanlu217/ev3lib/ev3lib/ev3"
@@ -48,5 +47,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	ev3lib.RunTimedCommand(config.GetCommandPages().Pages[0].Commands[1], 20*time.Millisecond)
+	// ev3lib.RunTimedCommand(config.GetCommandPages().Pages[0].Commands[1], 20*time.Millisecond)
+
+	menu := ev3lib.NewMainMenu(ev3.NewEV3MainMenu(config.Ev3), config.GetCommandPages())
+
+	menu.Start()
 }

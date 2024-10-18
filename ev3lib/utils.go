@@ -1,6 +1,10 @@
 package ev3lib
 
-import "math"
+import (
+	"math"
+
+	"golang.org/x/exp/constraints"
+)
 
 ////////////////////////////////////////////////////////////////////////////////
 // PID Controller                                                             //
@@ -74,4 +78,20 @@ func LCDIndexToPixel(idx int) (x, y int) {
 
 func LCDPixelToIndex(x, y int) int {
 	return x*4 + y*4*178
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Math                                                                       //
+////////////////////////////////////////////////////////////////////////////////
+
+func Clamp[T constraints.Ordered](v, min, max T) T {
+	if v > max {
+		return max
+	}
+
+	if v < min {
+		return min
+	}
+
+	return v
 }

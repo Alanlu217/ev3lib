@@ -24,12 +24,12 @@ func (b *BopConfig) Run1() *ev3lib.Command {
 		ev3lib.NewFuncCommand(func() { fmt.Printf("b.gyro.Angle(): %v\n", b.Gyro.Angle()) }),
 		ev3lib.NewWaitCommand(10*time.Second).WithTimeout(1*time.Second),
 		commands.NewCounterCommand(10).Repeatedly().WithTimeout(1*time.Second),
-		b.LeftDrive.SetCommand(1).WithTimeout(5*time.Second),
-		ev3lib.NewPrintlnCommand("Finished Run1"),
+		// b.LeftDrive.SetCommand(1).WithTimeout(5*time.Second),
+		ev3lib.NewPrintlnCommand("Finished Run1").WithTimeout(5*time.Second),
 	)
 }
 
-func (b *BopConfig) GetCommandPages() ev3lib.Menu {
+func (b *BopConfig) GetCommandPages() *ev3lib.Menu {
 	m := ev3lib.NewCommandMenu()
 
 	m.AddPage("runs").
@@ -42,5 +42,5 @@ func (b *BopConfig) GetCommandPages() ev3lib.Menu {
 		)).
 		Add()
 
-	return *m
+	return m
 }

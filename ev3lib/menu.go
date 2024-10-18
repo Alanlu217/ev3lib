@@ -1,5 +1,9 @@
 package ev3lib
 
+import (
+	"time"
+)
+
 type NamedCommand struct {
 	Name string
 	CommandInterface
@@ -44,4 +48,71 @@ func (c *Menu) AddPage(name string) *MenuPage {
 
 type MenuConfig interface {
 	GetCommandPages() Menu
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Main Menu                                                                  //
+////////////////////////////////////////////////////////////////////////////////
+
+type MainMenu struct {
+	i MainMenuInterface
+	m *Menu
+
+	commandIdx, pageIdx int
+}
+
+func NewMainMenu(i MainMenuInterface, m *Menu) *MainMenu {
+	return &MainMenu{i, m, 0, 0}
+}
+
+func (m *MainMenu) Start() {
+	t := time.NewTicker(time.Millisecond * 50)
+
+main:
+	for {
+		// Check if program should exit
+		if m.i.Exit() {
+			break main
+		}
+
+		if m.i.NextCommand() {
+			m.commandIdx += 1
+		}
+
+		if m.i.PreviousCommand() {
+			m.commandIdx -= 1
+		}
+
+		f, idx := m.i.SetCommand()
+		if f {
+			m.commandIdx = idx
+		}
+
+		if m.i.NextPage() {
+			m.pageIdx += 1
+			m.commandIdx = 0
+		}
+
+		if m.i.PreviousPage() {
+			m.pageIdx -= 1
+			m.commandIdx = 0
+		}
+
+		f, idx = m.i.SetPage()
+		if f {
+			m.pageIdx = idx
+			m.commandIdx = 0
+		}
+
+		m.pageIdx = Clamp(m.pageIdx, 0, len(m.m.Pages))
+		m.commandIdx = Clamp(m.commandIdx, 0, len(m.m.Pages[m.pageIdx].Commands))
+
+		if m.i.RunSelected() {
+			RunTimedCommand(m.m.Pages[m.pageIdx].Commands[m.commandIdx], time.Millisecond*20)
+		}
+
+		m.i.Display(m.m, m.commandIdx, m.pageIdx)
+
+		<-t.C
+	}
 }

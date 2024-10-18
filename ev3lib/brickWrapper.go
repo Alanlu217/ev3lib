@@ -11,15 +11,3 @@ type EV3Brick struct {
 func NewEV3BrickBase(e EV3BrickInterface) *EV3Brick {
 	return &EV3Brick{e}
 }
-
-////////////////////////////////////////////////////////////////////////////////
-// MainMenuInterface Base                                                                 //
-////////////////////////////////////////////////////////////////////////////////
-
-type MainMenuController struct {
-	MainMenuInterface
-}
-
-func NewMainMenuController(m MainMenuInterface) *MainMenuController {
-	return &MainMenuController{m}
-}

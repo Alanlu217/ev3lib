@@ -1,7 +1,7 @@
 package ev3
 
 import (
-	"slices"
+	"fmt"
 
 	"github.com/Alanlu217/ev3lib/ev3lib"
 )
@@ -10,38 +10,52 @@ import (
 // EV3 Main Menu                                                              //
 ////////////////////////////////////////////////////////////////////////////////
 
+var _ ev3lib.MainMenuInterface = &EV3MainMenu{}
+
 type EV3MainMenu struct {
-	ev3 ev3lib.EV3Brick
+	ev3 *ev3lib.EV3Brick
+}
+
+func NewEV3MainMenu(ev3 *ev3lib.EV3Brick) *EV3MainMenu {
+	return &EV3MainMenu{ev3}
+}
+
+func (e *EV3MainMenu) Exit() bool {
+	return false
 }
 
 func (e *EV3MainMenu) RunSelected() bool {
-	return slices.Contains(e.ev3.ButtonsPressed(), ev3lib.Middle)
+	return e.ev3.IsButtonPressed(ev3lib.Middle)
 }
 
 func (e *EV3MainMenu) NextCommand() bool {
-	panic("not implemented") // TODO: Implement
+	return e.ev3.IsButtonPressed(ev3lib.Down)
 }
 
 func (e *EV3MainMenu) PreviousCommand() bool {
-	panic("not implemented") // TODO: Implement
+	return e.ev3.IsButtonPressed(ev3lib.Up)
 }
 
-func (e *EV3MainMenu) SetCommand() int {
-	panic("not implemented") // TODO: Implement
+func (e *EV3MainMenu) SetCommand() (bool, int) {
+	return false, 0
 }
 
 func (e *EV3MainMenu) NextPage() bool {
-	panic("not implemented") // TODO: Implement
+	return e.ev3.IsButtonPressed(ev3lib.Right)
+
 }
 
 func (e *EV3MainMenu) PreviousPage() bool {
-	panic("not implemented") // TODO: Implement
+	return e.ev3.IsButtonPressed(ev3lib.Left)
 }
 
-func (e *EV3MainMenu) SetPage() int {
-	panic("not implemented") // TODO: Implement
+func (e *EV3MainMenu) SetPage() (bool, int) {
+	return false, 0
 }
 
 func (e *EV3MainMenu) Display(menu *ev3lib.Menu, command int, page int) {
-	panic("not implemented") // TODO: Implement
+	e.ev3.ClearScreen()
+	e.ev3.DrawText(0, 0, fmt.Sprintf("Command %v on page %v", command, page))
+
+	// fmt.Println(e.ev3.ButtonsPressed())
 }

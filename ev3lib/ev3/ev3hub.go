@@ -17,41 +17,36 @@ var _ ev3lib.EV3BrickInterface = &ev3{}
 
 type ev3 struct {
 	p ev3dev.PowerSupply
-	b ev3dev.ButtonPoller
+
+	b *ev3ButtonHandler
 }
 
 func NewEV3() *ev3lib.EV3Brick {
-	return ev3lib.NewEV3BrickBase(&ev3{p: "", b: ev3dev.ButtonPoller{}})
+	ev3 := &ev3{p: "", b: newEv3ButtonHandler()}
+
+	go ev3.b.run()
+
+	return ev3lib.NewEV3BrickBase(ev3)
+}
+
+func (e *ev3) IsButtonPressed(button ev3lib.EV3Button) bool {
+	return e.b.get(button) == pressed
+}
+
+func (e *ev3) IsButtonDown(button ev3lib.EV3Button) bool {
+	return e.b.get(button) == down
+}
+
+func (e *ev3) IsButtonReleased(button ev3lib.EV3Button) bool {
+	return e.b.get(button) == released
+}
+
+func (e *ev3) IsButtonUp(button ev3lib.EV3Button) bool {
+	return e.b.get(button) == up
 }
 
 func (e *ev3) ButtonsPressed() []ev3lib.EV3Button {
-	val, err := e.b.Poll()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	result := make([]ev3lib.EV3Button, 0)
-
-	if val&ev3dev.Back != 0 {
-		result = append(result, ev3lib.Back)
-	}
-	if val&ev3dev.Left != 0 {
-		result = append(result, ev3lib.Left)
-	}
-	if val&ev3dev.Middle != 0 {
-		result = append(result, ev3lib.Middle)
-	}
-	if val&ev3dev.Right != 0 {
-		result = append(result, ev3lib.Right)
-	}
-	if val&ev3dev.Up != 0 {
-		result = append(result, ev3lib.Up)
-	}
-	if val&ev3dev.Down != 0 {
-		result = append(result, ev3lib.Down)
-	}
-
-	return result
+	return e.b.getDown()
 }
 
 func (e *ev3) SetLight(color ev3lib.EV3Color) {
@@ -72,9 +67,6 @@ func (e *ev3) SetVolume(volume float64) {
 
 func (e *ev3) ClearScreen() {
 	LCD.Clear()
-	// for i := 0; i < LCDByteLength; i++ {
-	// 	LCD.Data[i] = 255
-	// }
 }
 
 func (e *ev3) DrawText(x int, y int, text string) {

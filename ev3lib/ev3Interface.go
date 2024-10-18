@@ -5,6 +5,10 @@ package ev3lib
 ////////////////////////////////////////////////////////////////////////////////
 
 type EV3BrickInterface interface {
+	IsButtonPressed(button EV3Button) bool
+	IsButtonDown(button EV3Button) bool
+	IsButtonReleased(button EV3Button) bool
+	IsButtonUp(button EV3Button) bool
 	ButtonsPressed() []EV3Button
 
 	SetLight(color EV3Color)
@@ -33,17 +37,19 @@ type EV3BrickInterface interface {
 ////////////////////////////////////////////////////////////////////////////////
 
 type MainMenuInterface interface {
+	Exit() bool
+
 	RunSelected() bool
 
 	NextCommand() bool
 	PreviousCommand() bool
 
-	SetCommand() int
+	SetCommand() (bool, int)
 
 	NextPage() bool
 	PreviousPage() bool
 
-	SetPage() int
+	SetPage() (bool, int)
 
 	Display(menu *Menu, command, page int)
 }
