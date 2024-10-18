@@ -236,6 +236,7 @@ func NewSequence(commands ...CommandInterface) *Command {
 }
 
 func (s *sequence) Init() {
+	s.current = 0
 	s.commands[0].Init()
 }
 
@@ -274,6 +275,7 @@ func NewParallel(commands ...CommandInterface) *Command {
 }
 
 func (p *parallel) Init() {
+	p.incomplete = len(p.commands)
 	for _, c := range p.commands {
 		c.Init()
 	}
