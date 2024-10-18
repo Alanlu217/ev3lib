@@ -115,7 +115,15 @@ func (b *ev3ButtonHandler) run() {
 }
 
 func (b *ev3ButtonHandler) get(button ev3lib.EV3Button) buttonState {
-	return b.buttons[button].get()
+	val := b.buttons[button].get()
+
+	if val == pressed {
+		b.buttons[button].set(down)
+	} else if val == released {
+		b.buttons[button].set(up)
+	}
+
+	return val
 }
 
 func (b *ev3ButtonHandler) getDown() []ev3lib.EV3Button {

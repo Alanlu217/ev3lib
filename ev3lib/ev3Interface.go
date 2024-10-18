@@ -51,7 +51,7 @@ type MainMenuInterface interface {
 
 	SetPage() (bool, int)
 
-	Display(menu *Menu, command, page int)
+	Display(menu *Menu, command, page int, running bool)
 }
 
 ////////////////////////////////////////////////////////////////////////////////

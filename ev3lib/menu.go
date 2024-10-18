@@ -1,6 +1,7 @@
 package ev3lib
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -77,10 +78,12 @@ main:
 
 		if m.i.NextCommand() {
 			m.commandIdx += 1
+			fmt.Println("Next Command")
 		}
 
 		if m.i.PreviousCommand() {
 			m.commandIdx -= 1
+			fmt.Println("Prev Command")
 		}
 
 		f, idx := m.i.SetCommand()
@@ -104,14 +107,16 @@ main:
 			m.commandIdx = 0
 		}
 
-		m.pageIdx = Clamp(m.pageIdx, 0, len(m.m.Pages))
-		m.commandIdx = Clamp(m.commandIdx, 0, len(m.m.Pages[m.pageIdx].Commands))
+		m.pageIdx = Clamp(m.pageIdx, 0, len(m.m.Pages)-1)
+		m.commandIdx = Clamp(m.commandIdx, 0, len(m.m.Pages[m.pageIdx].Commands)-1)
 
 		if m.i.RunSelected() {
+			m.i.Display(m.m, m.commandIdx, m.pageIdx, true)
+
 			RunTimedCommand(m.m.Pages[m.pageIdx].Commands[m.commandIdx], time.Millisecond*20)
 		}
 
-		m.i.Display(m.m, m.commandIdx, m.pageIdx)
+		m.i.Display(m.m, m.commandIdx, m.pageIdx, false)
 
 		<-t.C
 	}
