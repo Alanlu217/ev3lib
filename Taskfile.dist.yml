@@ -29,6 +29,6 @@ tasks:
       out: '{{.o | default "main"}}'
 
     cmds:
-      - GOOS=linux GOARCH=arm GOARM=5 go build -o {{.out}} .
+      - GOOS=linux GOARCH=arm GOARM=5 go build -ldflags="-s -w" -o {{.out}} .
 
     dir: '{{.USER_WORKING_DIR}}'
