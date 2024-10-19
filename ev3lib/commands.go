@@ -8,7 +8,7 @@ import (
 )
 
 ////////////////////////////////////////////////////////////////////////////////
-// CommandInterface Interface                                                          //
+// CommandInterface Interface                                                 //
 ////////////////////////////////////////////////////////////////////////////////
 
 // CommandInterface defines the interface for all commands to implement.
@@ -20,7 +20,7 @@ type CommandInterface interface {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Default CommandInterface                                                            //
+// Default CommandInterface                                                   //
 ////////////////////////////////////////////////////////////////////////////////
 
 // DefaultCommand provides a default implementation for all commands.
@@ -37,7 +37,7 @@ func (b *DefaultCommand) IsDone() bool {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Base CommandInterface                                                               //
+// Base CommandInterface                                                      //
 ////////////////////////////////////////////////////////////////////////////////
 
 // Command provides decorator functions on commands.
@@ -50,7 +50,7 @@ func NewCommand(c CommandInterface) *Command {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// CommandInterface Decorators                                                         //
+// CommandInterface Decorators                                                //
 ////////////////////////////////////////////////////////////////////////////////
 
 // WithTimeout adds a timeout to a command specified by `dur`.
@@ -184,7 +184,7 @@ func (r *whenDoneCommandDecorator) IsDone() bool {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Blocking CommandInterface Runner                                                    //
+// Blocking CommandInterface Runner                                           //
 ////////////////////////////////////////////////////////////////////////////////
 
 // RunCommand will run a command in a blocking fashion.
@@ -220,7 +220,7 @@ func RunTimedCommand(c CommandInterface, intervalTime time.Duration) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Sequence CommandInterface                                                           //
+// Sequence CommandInterface                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 
 type sequence struct {
@@ -265,7 +265,7 @@ func (s *sequence) IsDone() bool {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Parallel CommandInterface                                                           //
+// Parallel CommandInterface                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 
 type parallel struct {
@@ -309,7 +309,7 @@ func (p *parallel) IsDone() bool {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Parallel Race CommandInterface                                                      //
+// Parallel Race CommandInterface                                             //
 ////////////////////////////////////////////////////////////////////////////////
 
 type parallelRace struct {
