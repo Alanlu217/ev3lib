@@ -3,7 +3,6 @@ package ev3
 import (
 	"log"
 	"sync"
-	"time"
 
 	"github.com/Alanlu217/ev3lib/ev3lib"
 	"github.com/ev3go/ev3dev"
@@ -95,7 +94,7 @@ func (b *ev3ButtonHandler) updateButton(isUp bool, button ev3lib.EV3Button) {
 }
 
 func (b *ev3ButtonHandler) run() {
-	t := time.NewTicker(50 * time.Millisecond)
+	// t := time.NewTicker(50 * time.Millisecond)
 
 	for {
 		val, err := b.poller.Poll()
@@ -110,7 +109,7 @@ func (b *ev3ButtonHandler) run() {
 		b.updateButton(val&ev3dev.Up == 0, ev3lib.Up)
 		b.updateButton(val&ev3dev.Down == 0, ev3lib.Down)
 
-		<-t.C
+		// <-t.C
 	}
 }
 
