@@ -254,6 +254,12 @@ func (s *sequence) Run() {
 	}
 }
 
+func (s *sequence) End(interrupted bool) {
+	if s.current < len(s.commands) {
+		s.commands[s.current].End(interrupted)
+	}
+}
+
 func (s *sequence) IsDone() bool {
 	return s.current >= len(s.commands)
 }
