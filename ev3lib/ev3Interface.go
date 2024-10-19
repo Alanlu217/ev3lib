@@ -40,6 +40,7 @@ type MainMenuInterface interface {
 	Exit() bool
 
 	RunSelected() bool
+	CancelRun() bool
 
 	NextCommand() bool
 	PreviousCommand() bool

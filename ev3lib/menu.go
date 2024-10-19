@@ -2,12 +2,13 @@ package ev3lib
 
 import (
 	"fmt"
+	"log"
 	"time"
 )
 
 type NamedCommand struct {
 	Name string
-	CommandInterface
+	*Command
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -21,7 +22,7 @@ type MenuPage struct {
 	Commands []NamedCommand
 }
 
-func (c *MenuPage) AddCommand(name string, command CommandInterface) *MenuPage {
+func (c *MenuPage) AddCommand(name string, command *Command) *MenuPage {
 	c.Commands = append(c.Commands, NamedCommand{name, command})
 
 	return c
@@ -78,12 +79,10 @@ main:
 
 		if m.i.NextCommand() {
 			m.commandIdx += 1
-			fmt.Println("Next Command")
 		}
 
 		if m.i.PreviousCommand() {
 			m.commandIdx -= 1
-			fmt.Println("Prev Command")
 		}
 
 		f, idx := m.i.SetCommand()
@@ -113,7 +112,41 @@ main:
 		if m.i.RunSelected() {
 			m.i.Display(m.m, m.commandIdx, m.pageIdx, true)
 
-			RunTimedCommand(m.m.Pages[m.pageIdx].Commands[m.commandIdx], time.Millisecond*20)
+			intervalTime := 20 * time.Millisecond
+			c := m.m.Pages[m.pageIdx].Commands[m.commandIdx]
+
+			t := time.NewTicker(intervalTime)
+
+			start := time.Now()
+
+			c.Init()
+
+			for !c.IsDone() {
+				if m.i.CancelRun() && time.Since(start) > 100*time.Millisecond {
+					c.End(true)
+					t.Stop()
+
+					fmt.Printf("%v took %v\n", c.Name, time.Since(start))
+
+					continue main
+				}
+
+				start := time.Now()
+
+				c.Run()
+
+				delta := time.Since(start)
+
+				if delta > intervalTime {
+					log.Printf("Loop time overrun, took: %v\n", delta)
+				}
+
+				<-t.C
+			}
+			c.End(false)
+			fmt.Printf("%v took %v\n", c.Name, time.Since(start))
+
+			t.Stop()
 		}
 
 		m.i.Display(m.m, m.commandIdx, m.pageIdx, false)

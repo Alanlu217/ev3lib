@@ -32,6 +32,10 @@ func (e *EV3MainMenu) RunSelected() bool {
 	return e.ev3.IsButtonPressed(ev3lib.Middle)
 }
 
+func (e *EV3MainMenu) CancelRun() bool {
+	return e.ev3.IsButtonPressed(ev3lib.Middle)
+}
+
 func (e *EV3MainMenu) NextCommand() bool {
 	return e.ev3.IsButtonPressed(ev3lib.Down)
 }
