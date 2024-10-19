@@ -10,6 +10,7 @@ go get github.com/Alanlu217/ev3lib/ev3lib/testUtils # If doing simulations
 ```
 
 ## Docs
+ - [Wiki](https://github.com/Alanlu217/ev3lib/wiki)
  - [ev3lib](https://pkg.go.dev/github.com/Alanlu217/ev3lib/ev3lib)
  - [ev3](https://pkg.go.dev/github.com/Alanlu217/ev3lib/ev3lib/ev3)
  - [testUtils](https://pkg.go.dev/github.com/Alanlu217/ev3lib/ev3lib/testUtils)
