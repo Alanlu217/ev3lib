@@ -9,7 +9,7 @@ import (
 	"github.com/Alanlu217/ev3lib/ev3lib"
 )
 
-type BopConfig struct {
+type Config struct {
 	Ev3 *ev3lib.EV3Brick
 
 	Gyro *ev3lib.GyroSensor
@@ -19,7 +19,7 @@ type BopConfig struct {
 	LeftDrive, RightDrive *ev3lib.Motor
 }
 
-func (b *BopConfig) Run1() *ev3lib.Command {
+func (b *Config) Run1() *ev3lib.Command {
 	return ev3lib.NewSequence(
 		ev3lib.NewFuncCommand(func() { fmt.Printf("b.gyro.Angle(): %v\n", b.Gyro.Angle()) }),
 		ev3lib.NewWaitCommand(10*time.Second).WithTimeout(1*time.Second),
@@ -29,7 +29,7 @@ func (b *BopConfig) Run1() *ev3lib.Command {
 	)
 }
 
-func (b *BopConfig) GetCommandPages() *ev3lib.Menu {
+func (b *Config) GetCommandPages() *ev3lib.Menu {
 	m := ev3lib.NewCommandMenu()
 
 	m.AddPage("runs").

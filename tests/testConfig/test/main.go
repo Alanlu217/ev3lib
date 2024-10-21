@@ -5,11 +5,11 @@ import (
 
 	"github.com/Alanlu217/ev3lib/ev3lib"
 	"github.com/Alanlu217/ev3lib/ev3lib/testUtils"
-	"github.com/Alanlu217/ev3lib/tests/bopConfig"
+	testConfig "github.com/Alanlu217/ev3lib/tests/testConfig"
 )
 
 func main() {
-	config := &bopConfig.BopConfig{}
+	config := &testConfig.Config{}
 
 	config.Ev3 = testUtils.NewTestEV3Brick()
 

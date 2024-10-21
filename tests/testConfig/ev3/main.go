@@ -7,11 +7,11 @@ import (
 
 	"github.com/Alanlu217/ev3lib/ev3lib"
 	"github.com/Alanlu217/ev3lib/ev3lib/ev3"
-	"github.com/Alanlu217/ev3lib/tests/bopConfig"
+	testConfig "github.com/Alanlu217/ev3lib/tests/testConfig"
 )
 
 func main() {
-	config := &bopConfig.BopConfig{}
+	config := &testConfig.Config{}
 
 	var err error
 
@@ -47,9 +47,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// ev3lib.RunTimedCommand(config.GetCommandPages().Pages[0].Commands[1], 20*time.Millisecond)
-
-	menu := ev3lib.NewMainMenu(ev3.NewEV3MainMenu(config.Ev3), config.GetCommandPages())
-
+	menu := ev3.NewEV3MainMenu(config.Ev3, config.GetCommandPages())
 	menu.Start()
 }

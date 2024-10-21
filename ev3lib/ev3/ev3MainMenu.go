@@ -20,8 +20,8 @@ type EV3MainMenu struct {
 	idx int
 }
 
-func NewEV3MainMenu(ev3 *ev3lib.EV3Brick) *EV3MainMenu {
-	return &EV3MainMenu{ev3, 0}
+func NewEV3MainMenu(ev3 *ev3lib.EV3Brick, m *ev3lib.Menu) *ev3lib.MainMenu {
+	return ev3lib.NewMainMenu(&EV3MainMenu{ev3, 0}, m)
 }
 
 func (e *EV3MainMenu) Exit() bool {
