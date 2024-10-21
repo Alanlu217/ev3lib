@@ -22,5 +22,5 @@ func main() {
 	config.LeftDrive = testUtils.NewTestMotor("Left Drive")
 	config.RightDrive = testUtils.NewTestMotor("Right Drive Motor")
 
-	ev3lib.RunTimedCommand(config.GetCommandPages().Pages[0].Commands[1], 20*time.Millisecond)
+	ev3lib.RunTimedCommand(config.GetCommandPages().Pages[0].Commands[8], 20*time.Millisecond)
 }
