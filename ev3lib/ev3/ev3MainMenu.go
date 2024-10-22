@@ -12,43 +12,43 @@ const maxRows int = (LCDHeight / CharHeight) - 1
 // EV3 Main Menu                                                              //
 ////////////////////////////////////////////////////////////////////////////////
 
-var _ ev3lib.MainMenuInterface = &EV3MainMenu{}
+var _ ev3lib.MainMenuInterface = &MainMenu{}
 
-type EV3MainMenu struct {
+type MainMenu struct {
 	ev3 *ev3lib.EV3Brick
 
 	idx int
 }
 
 func NewEV3MainMenu(ev3 *ev3lib.EV3Brick, m *ev3lib.Menu) *ev3lib.MainMenu {
-	return ev3lib.NewMainMenu(&EV3MainMenu{ev3, 0}, m)
+	return ev3lib.NewMainMenu(&MainMenu{ev3, 0}, m)
 }
 
-func (e *EV3MainMenu) Exit() bool {
+func (e *MainMenu) Exit() bool {
 	return false
 }
 
-func (e *EV3MainMenu) RunSelected() bool {
+func (e *MainMenu) RunSelected() bool {
 	return e.ev3.IsButtonPressed(ev3lib.Middle)
 }
 
-func (e *EV3MainMenu) CancelRun() bool {
+func (e *MainMenu) CancelRun() bool {
 	return e.ev3.IsButtonPressed(ev3lib.Middle)
 }
 
-func (e *EV3MainMenu) NextCommand() bool {
+func (e *MainMenu) NextCommand() bool {
 	return e.ev3.IsButtonPressed(ev3lib.Down)
 }
 
-func (e *EV3MainMenu) PreviousCommand() bool {
+func (e *MainMenu) PreviousCommand() bool {
 	return e.ev3.IsButtonPressed(ev3lib.Up)
 }
 
-func (e *EV3MainMenu) SetCommand() (bool, int) {
+func (e *MainMenu) SetCommand() (bool, int) {
 	return false, 0
 }
 
-func (e *EV3MainMenu) NextPage() bool {
+func (e *MainMenu) NextPage() bool {
 	if e.ev3.IsButtonPressed(ev3lib.Right) {
 		e.idx = 0
 		return true
@@ -56,7 +56,7 @@ func (e *EV3MainMenu) NextPage() bool {
 	return false
 }
 
-func (e *EV3MainMenu) PreviousPage() bool {
+func (e *MainMenu) PreviousPage() bool {
 	if e.ev3.IsButtonPressed(ev3lib.Left) {
 		e.idx = 0
 		return true
@@ -64,11 +64,11 @@ func (e *EV3MainMenu) PreviousPage() bool {
 	return false
 }
 
-func (e *EV3MainMenu) SetPage() (bool, int) {
+func (e *MainMenu) SetPage() (bool, int) {
 	return false, 0
 }
 
-func (e *EV3MainMenu) Display(menu *ev3lib.Menu, command int, page int, running bool) {
+func (e *MainMenu) Display(menu *ev3lib.Menu, command int, page int, running bool) {
 	e.ev3.ClearScreen()
 
 	if running {

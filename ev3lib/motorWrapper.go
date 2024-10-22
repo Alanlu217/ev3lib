@@ -71,7 +71,7 @@ func (r *runToRelPosCommand) Run() {
 	r.m.Set(pow)
 }
 
-func (r *runToRelPosCommand) End(interrupted bool) {
+func (r *runToRelPosCommand) End(_ bool) {
 	r.m.Stop()
 }
 
@@ -79,7 +79,7 @@ func (r *runToRelPosCommand) IsDone() bool {
 	return r.done
 }
 
-func (m *Motor) RunToRelPos(pos float64, tolerance float64, pid PIDController) *Command {
+func (m *Motor) RunToRelPos(pos float64, _ float64, pid PIDController) *Command {
 	return NewCommand(&runToRelPosCommand{pos: pos, pid: pid, m: m.MotorInterface})
 }
 
@@ -107,7 +107,7 @@ func (r *runToAbsPosCommand) Run() {
 	r.m.Set(pow)
 }
 
-func (r *runToAbsPosCommand) End(interrupted bool) {
+func (r *runToAbsPosCommand) End(_ bool) {
 	r.m.Stop()
 }
 
@@ -115,6 +115,6 @@ func (r *runToAbsPosCommand) IsDone() bool {
 	return r.done
 }
 
-func (m *Motor) RunToAbsPos(pos float64, tolerance float64, pid PIDController) *Command {
+func (m *Motor) RunToAbsPos(pos float64, _ float64, pid PIDController) *Command {
 	return NewCommand(&runToAbsPosCommand{pos: pos, pid: pid, m: m.MotorInterface})
 }

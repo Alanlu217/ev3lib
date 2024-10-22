@@ -100,8 +100,8 @@ func (u *untilCommandDecorator) IsDone() bool {
 ////////////////////////////////////////////////////////////////////////////////
 
 // OnlyIf will run a command only if a predicate returns true.
-func (c *Command) OnlyIf(pred func() bool) *Command {
-	return NewIfCommand(pred, c.CommandInterface, NewFuncCommand(func() {}))
+func (c *Command) OnlyIf(predicate func() bool) *Command {
+	return NewIfCommand(predicate, c.CommandInterface, NewFuncCommand(func() {}))
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -433,19 +433,19 @@ func (p *printCommand) IsDone() bool {
 type ifCommand struct {
 	DefaultCommand
 
-	isA  bool
-	pred func() bool
-	a, b CommandInterface
+	isA       bool
+	predicate func() bool
+	a, b      CommandInterface
 }
 
 // NewIfCommand returns a command that will run a command depending on a predicate.
 // If the predicate returns true when the command is initialised, then command a will be run.
 func NewIfCommand(runA func() bool, a, b CommandInterface) *Command {
-	return NewCommand(&ifCommand{isA: true, pred: runA, a: a, b: b})
+	return NewCommand(&ifCommand{isA: true, predicate: runA, a: a, b: b})
 }
 
 func (f *ifCommand) Init() {
-	f.isA = f.pred()
+	f.isA = f.predicate()
 
 	if f.isA {
 		f.a.Init()

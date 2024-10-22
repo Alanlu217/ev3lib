@@ -1,6 +1,9 @@
 package testUtils
 
-import "github.com/Alanlu217/ev3lib/ev3lib"
+import (
+	"github.com/Alanlu217/ev3lib/ev3lib"
+	"log"
+)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Test Color Sensor                                                          //
@@ -50,7 +53,9 @@ func (s *testGyroSensor) AngleRate() (float64, float64) {
 	return 0, 0
 }
 
-func (s *testGyroSensor) ResetAngle(angle float64) {}
+func (s *testGyroSensor) ResetAngle(angle float64) {
+	log.Printf("reset angle to %v\n", angle)
+}
 
 func (s *testGyroSensor) Calibrate() {}
 
@@ -70,7 +75,7 @@ func (s *testInfraredSensor) Distance() float64 {
 	return 0
 }
 
-func (s *testInfraredSensor) Buttons(channel int) []ev3lib.BeaconButton {
+func (s *testInfraredSensor) Buttons(_ int) []ev3lib.BeaconButton {
 	return []ev3lib.BeaconButton{}
 }
 

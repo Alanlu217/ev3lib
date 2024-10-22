@@ -1,5 +1,3 @@
-//go:build !ev3test
-
 package ev3
 
 import (

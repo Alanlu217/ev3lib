@@ -18,19 +18,19 @@ func NewTestEV3Brick() *ev3lib.EV3Brick {
 	return ev3lib.NewEV3BrickBase(&testEV3Brick{})
 }
 
-func (testEV3Brick) IsButtonPressed(button ev3lib.EV3Button) bool {
+func (*testEV3Brick) IsButtonPressed(button ev3lib.EV3Button) bool {
 	return false
 }
 
-func (testEV3Brick) IsButtonDown(button ev3lib.EV3Button) bool {
+func (*testEV3Brick) IsButtonDown(button ev3lib.EV3Button) bool {
 	return false
 }
 
-func (testEV3Brick) IsButtonReleased(button ev3lib.EV3Button) bool {
+func (*testEV3Brick) IsButtonReleased(button ev3lib.EV3Button) bool {
 	return false
 }
 
-func (testEV3Brick) IsButtonUp(button ev3lib.EV3Button) bool {
+func (*testEV3Brick) IsButtonUp(button ev3lib.EV3Button) bool {
 	return false
 }
 

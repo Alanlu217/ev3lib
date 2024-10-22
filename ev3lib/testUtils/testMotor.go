@@ -7,7 +7,7 @@ import (
 )
 
 ////////////////////////////////////////////////////////////////////////////////
-// Test MotorInterface                                                                 //
+// Test MotorInterface                                                        //
 ////////////////////////////////////////////////////////////////////////////////
 
 type testMotor struct {
@@ -51,7 +51,7 @@ func (m *testMotor) Position() float64 {
 }
 
 func (m *testMotor) ResetPosition(pos float64) {
-	log.Printf("%v reset position\n", m.name)
+	log.Printf("%v reset position to %v\n", m.name, pos)
 }
 
 func (m *testMotor) Speed() float64 {

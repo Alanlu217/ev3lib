@@ -11,7 +11,7 @@ func (c ConfigNotFoundError) Error() string {
 	return fmt.Sprintf("could not find config for %v", c.name)
 }
 
-var ConfigManager *configManager = &configManager{registeredConfigs: map[string]MenuConfig{}}
+var ConfigManager = &configManager{registeredConfigs: map[string]MenuConfig{}}
 
 type configManager struct {
 	registeredConfigs map[string]MenuConfig
